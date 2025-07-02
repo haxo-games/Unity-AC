@@ -8,9 +8,14 @@ public class PlayerMotor : MonoBehaviour
     bool isCrouching;
     float crouchTimer;
     bool lerpCrouch;
+    bool wasUngrounded;
+    float initialUngroundedY;
+
     [SerializeField] AudioClip crouchAudioClip;
     [SerializeField] AudioClip uncrouchAudioClip;
     [SerializeField] AudioClip jumpAudioClip;
+    [SerializeField] AudioClip landAudioClip;
+    [SerializeField] AudioClip stepAudioClip;
 
     public float speed = 5f;
     public float gravity = -9.81f;
@@ -24,6 +29,28 @@ public class PlayerMotor : MonoBehaviour
     void Update()
     {
         isGrounded = controller.isGrounded;
+
+        Debug.Log(wasUngrounded);
+
+        if (!isGrounded)
+        {
+            if (!wasUngrounded)
+            {
+                initialUngroundedY = transform.position.y;
+                wasUngrounded = true;
+            }
+        }
+        else if (wasUngrounded)
+        {
+            float distanceFallen = Mathf.Abs(transform.position.y - initialUngroundedY);
+            wasUngrounded = false;
+
+            if (distanceFallen >= 1.5f)
+                SfxManager.instance.PlaySound(landAudioClip, transform, 0.4f);
+            else
+                SfxManager.instance.PlaySound(stepAudioClip, transform, 0.4f);
+
+        }
 
         if (lerpCrouch)
         {

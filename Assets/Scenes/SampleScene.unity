@@ -591,6 +591,8 @@ MonoBehaviour:
   crouchAudioClip: {fileID: 8300000, guid: 337ea21f1adf89d4188cca1c4590b4d2, type: 3}
   uncrouchAudioClip: {fileID: 8300000, guid: 317fbaf86b9621b40b9415720a887de3, type: 3}
   jumpAudioClip: {fileID: 8300000, guid: c0aab59691b67a645b5bbd9d161ea782, type: 3}
+  landAudioClip: {fileID: 8300000, guid: 02a7fa7f6d14e8040867da66e05f30b3, type: 3}
+  stepAudioClip: {fileID: 0}
   speed: 5
   gravity: -9.81
   jumpHeight: 0.7
