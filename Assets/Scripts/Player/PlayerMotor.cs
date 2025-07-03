@@ -30,8 +30,6 @@ public class PlayerMotor : MonoBehaviour
     {
         isGrounded = controller.isGrounded;
 
-        Debug.Log(wasUngrounded);
-
         if (!isGrounded)
         {
             if (!wasUngrounded)

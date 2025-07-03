@@ -2,9 +2,10 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    PlayerInput playerInput;
     PlayerMotor playerMotor;
     PlayerLook playerLook;
+
+    public PlayerInput playerInput;
 
     void Awake()
     {
