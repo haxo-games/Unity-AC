@@ -8,8 +8,7 @@ public class HealthLogic : MonoBehaviour
 
     public int health = 100;
     public int armor = 0;
-    public event Action<int> OnDamage;
-
+    public event Action<int, int> OnDamage;
 
     public int takeDamage(int damage)
     {
@@ -22,7 +21,7 @@ public class HealthLogic : MonoBehaviour
         }
 
         health = Math.Max(health - finalDamage, 0);
-        OnDamage?.Invoke(health);
+        OnDamage?.Invoke(health, armor);
 
         if (health == 0)
         {

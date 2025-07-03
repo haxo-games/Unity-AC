@@ -3,8 +3,9 @@ using TMPro;
 
 public class PlayerUI : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI interactText;
     [SerializeField] TextMeshProUGUI healthText;
+    [SerializeField] TextMeshProUGUI armorText;
+    [SerializeField] TextMeshProUGUI interactText;
     Animator interactTextAnimator;
     bool interactTextShown;
     HealthLogic playerHealthLogic;
@@ -14,12 +15,13 @@ public class PlayerUI : MonoBehaviour
         interactTextAnimator = interactText.GetComponent<Animator>();
         playerHealthLogic = GetComponent<HealthLogic>();
 
-        playerHealthLogic.OnDamage += newHealth => SetDisplayedHealth(newHealth);
+        playerHealthLogic.OnDamage += HandleDamage;
     }
 
-    void SetDisplayedHealth(int newHealth)
+    void HandleDamage(int newHealth, int newArmor)
     {
         healthText.text = newHealth.ToString();
+        armorText.text = newArmor.ToString();
     }
 
     public void SetInteractText(string newInteractText)
