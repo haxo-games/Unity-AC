@@ -9,6 +9,7 @@ public class PlayerMotor : MonoBehaviour
     float crouchTimer;
     bool lerpCrouch;
     bool wasUngrounded;
+    bool isSprinting;
     float initialUngroundedY;
 
     [SerializeField] AudioClip crouchAudioClip;
@@ -20,6 +21,10 @@ public class PlayerMotor : MonoBehaviour
     public float speed = 5f;
     public float gravity = -9.81f;
     public float jumpHeight = 0.7f;
+    public float groundDrag = 10f;  // Higher = more responsive, lower = more sliding
+    public float airDrag = 2f;     // Drag when in air 
+    public float sprintSpeed = 8f;
+    public float sprintMultiplier = 1.6f;
 
     void Start()
     {
@@ -66,6 +71,10 @@ public class PlayerMotor : MonoBehaviour
                 crouchTimer = 0f;
             }
         }
+
+        bool sprintInput = Input.GetKey(KeyCode.LeftShift);
+        SetSprint(sprintInput);
+
     }
 
     public void ProcessMove(Vector2 input)
@@ -73,17 +82,39 @@ public class PlayerMotor : MonoBehaviour
         Vector3 worldDirection = transform.TransformDirection(new Vector3(input.x, 0, input.y));
         float processedSpeed = speed;
 
+
         if (isCrouching)
             processedSpeed /= 2f;
 
-        velocity.x = worldDirection.x * processedSpeed;
-        velocity.z = worldDirection.z * processedSpeed;
-        velocity.y += gravity * Time.deltaTime;
+        else if (isSprinting)
+            processedSpeed = sprintSpeed;
+
+
+        Vector3 targetVelocity = worldDirection * processedSpeed; // Target Velo Calcs
+        
+        
+        float currentDrag = isGrounded ? groundDrag : airDrag; // Applying drag
+        float dragMultiplier = 1f - (currentDrag * Time.deltaTime);
+        
+        
+        velocity.x = Mathf.Lerp(velocity.x, targetVelocity.x, currentDrag * Time.deltaTime); // Smoothing movment
+        velocity.z = Mathf.Lerp(velocity.z, targetVelocity.z, currentDrag * Time.deltaTime);
+        
+        
+        velocity.y += gravity * Time.deltaTime; // Grav
 
         if (isGrounded && velocity.y < 0)
             velocity.y = -2f;
 
         controller.Move(velocity * Time.deltaTime);
+    }
+    
+    public void SetSprint(bool Sprinting)
+    {
+        if (isGrounded && !isCrouching)
+            isSprinting = Sprinting;
+        else
+            isSprinting = false;
     }
 
     public void Jump()
