@@ -3,14 +3,14 @@ using UnityEngine;
 public class PlayerMotor : MonoBehaviour
 {
     CharacterController controller;
-    Vector3 velocity;
-    bool isGrounded;
-    bool isCrouching;
-    float crouchTimer;
-    bool lerpCrouch;
-    bool wasUngrounded;
-    bool isSprinting;
-    float initialUngroundedY;
+    private Vector3 velocity;
+    private bool isGrounded;
+    private bool isCrouching;
+    private float crouchTimer;
+    private bool lerpCrouch;
+    private bool wasUngrounded;
+    private bool isSprinting;
+    private float initialUngroundedY;
 
     [SerializeField] AudioClip crouchAudioClip;
     [SerializeField] AudioClip uncrouchAudioClip;
@@ -18,13 +18,13 @@ public class PlayerMotor : MonoBehaviour
     [SerializeField] AudioClip landAudioClip;
     [SerializeField] AudioClip stepAudioClip;
 
-    public float speed = 5f;
-    public float gravity = -9.81f;
-    public float jumpHeight = 0.7f;
-    public float groundDrag = 10f;  // Higher = more responsive, lower = more sliding
-    public float airDrag = 2f;     // Drag when in air 
-    public float sprintSpeed = 8f;
-    public float sprintMultiplier = 1.6f;
+    private float speed = 5f;
+    private float gravity = -9.81f;
+    private float jumpHeight = 0.7f;
+    private float groundDrag = 10f;  // Higher = more responsive, lower = more sliding
+    private float airDrag = 2f;     // Drag when in air 
+    private float sprintSpeed = 8f;
+    private float sprintMultiplier = 1.6f;
 
     void Start()
     {
@@ -74,7 +74,6 @@ public class PlayerMotor : MonoBehaviour
 
         bool sprintInput = Input.GetKey(KeyCode.LeftShift);
         SetSprint(sprintInput);
-
     }
 
     public void ProcessMove(Vector2 input)
