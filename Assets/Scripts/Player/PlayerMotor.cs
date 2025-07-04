@@ -3,27 +3,31 @@ using UnityEngine;
 public class PlayerMotor : MonoBehaviour
 {
     CharacterController controller;
-    private Vector3 velocity;
-    private bool isGrounded;
-    private bool isCrouching;
-    private float crouchTimer;
-    private bool lerpCrouch;
-    private bool wasUngrounded;
-    private bool isSprinting;
-    private float initialUngroundedY;
+    Vector3 velocity;
+    bool isGrounded;
+    bool isCrouching;
+    float crouchTimer;
+    bool lerpCrouch;
+    bool wasUngrounded;
+    bool isSprinting;
+    float initialUngroundedY;
+
+    bool wasMoving;
+    AudioSource footstepsAudioSource;
+
+    float speed = 5f;
+    float gravity = -9.81f;
+    float jumpHeight = 0.7f;
+    float groundDrag = 10f;
+    float airDrag = 2f;
+    float sprintSpeed = 8f;
 
     [SerializeField] AudioClip crouchAudioClip;
     [SerializeField] AudioClip uncrouchAudioClip;
     [SerializeField] AudioClip jumpAudioClip;
     [SerializeField] AudioClip landAudioClip;
     [SerializeField] AudioClip stepAudioClip;
-
-    private float speed = 5f;
-    private float gravity = -9.81f;
-    private float jumpHeight = 0.7f;
-    private float groundDrag = 10f;  // Higher = more responsive, lower = more sliding
-    private float airDrag = 2f;     // Drag when in air 
-    private float sprintSpeed = 8f;
+    [SerializeField] AudioClip footstepsAudioClip;
 
     void Start()
     {
@@ -51,7 +55,6 @@ public class PlayerMotor : MonoBehaviour
                 SfxManager.instance.PlaySound(landAudioClip, transform, 0.4f);
             else
                 SfxManager.instance.PlaySound(stepAudioClip, transform, 0.4f);
-
         }
 
         if (lerpCrouch)
@@ -80,31 +83,69 @@ public class PlayerMotor : MonoBehaviour
         Vector3 worldDirection = transform.TransformDirection(new Vector3(input.x, 0, input.y));
         float processedSpeed = speed;
 
-
         if (isCrouching)
             processedSpeed /= 2f;
-
         else if (isSprinting)
             processedSpeed = sprintSpeed;
 
+        Vector3 targetVelocity = worldDirection * processedSpeed;
+        float currentDrag = isGrounded ? groundDrag : airDrag;
 
-        Vector3 targetVelocity = worldDirection * processedSpeed; // Target Velo Calcs
-
-
-        float currentDrag = isGrounded ? groundDrag : airDrag; // Applying drag
-        float dragMultiplier = 1f - (currentDrag * Time.deltaTime);
-
-
-        velocity.x = Mathf.Lerp(velocity.x, targetVelocity.x, currentDrag * Time.deltaTime); // Smoothing movment
+        velocity.x = Mathf.Lerp(velocity.x, targetVelocity.x, currentDrag * Time.deltaTime);
         velocity.z = Mathf.Lerp(velocity.z, targetVelocity.z, currentDrag * Time.deltaTime);
+        velocity.y += gravity * Time.deltaTime;
 
-
-        velocity.y += gravity * Time.deltaTime; // Grav
+        bool isMoving = (input.x != 0 || input.y != 0) && isGrounded;
+        HandleFootsteps(isMoving);
 
         if (isGrounded && velocity.y < 0)
             velocity.y = -2f;
 
         controller.Move(velocity * Time.deltaTime);
+    }
+
+    void HandleFootsteps(bool isMoving)
+    {
+        if (isMoving)
+        {
+            float pitchMultiplier = 1f;
+            float volume = 0.4f;
+
+            if (isCrouching)
+            {
+                pitchMultiplier = 0.7f;
+                volume = 0.2f;
+            }
+            else if (isSprinting)
+            {
+                pitchMultiplier = 1.3f;
+                volume = 0.5f;
+            }
+
+            if (footstepsAudioSource == null || !footstepsAudioSource.isPlaying)
+            {
+                footstepsAudioSource = SfxManager.instance.PlaySoundHandled(footstepsAudioClip, transform, volume);
+                if (footstepsAudioSource != null)
+                {
+                    footstepsAudioSource.loop = true;
+                    footstepsAudioSource.pitch = pitchMultiplier;
+                }
+            }
+            else
+            {
+                footstepsAudioSource.volume = volume;
+                footstepsAudioSource.pitch = pitchMultiplier;
+            }
+        }
+        else if (footstepsAudioSource != null)
+        {
+            footstepsAudioSource.Stop();
+            Destroy(footstepsAudioSource.gameObject);
+            footstepsAudioSource = null;
+
+        }
+
+        wasMoving = isMoving;
     }
 
     public void SetSprint(bool Sprinting)
@@ -119,7 +160,7 @@ public class PlayerMotor : MonoBehaviour
     {
         if (isGrounded)
         {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity); // v² = u² + 2as -> u = √(-2 × gravity × jumpHeight)
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             SfxManager.instance.PlaySound(jumpAudioClip, transform, 0.4f);
         }
     }

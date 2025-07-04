@@ -21,4 +21,14 @@ public class SfxManager : MonoBehaviour
 
         Destroy(audioSource.gameObject, audioSource.clip.length);
     }
+
+    public AudioSource PlaySoundHandled(AudioClip audioClip, Transform spawnTransform, float volume)
+    {
+        AudioSource audioSource = Instantiate(sfxManagerAudioSource, spawnTransform.position, Quaternion.identity);
+        audioSource.clip = audioClip;
+        audioSource.volume = volume;
+        audioSource.Play();
+
+        return audioSource;
+    }
 }
