@@ -24,7 +24,6 @@ public class PlayerMotor : MonoBehaviour
     private float groundDrag = 10f;  // Higher = more responsive, lower = more sliding
     private float airDrag = 2f;     // Drag when in air 
     private float sprintSpeed = 8f;
-    private float sprintMultiplier = 1.6f;
 
     void Start()
     {
@@ -90,16 +89,16 @@ public class PlayerMotor : MonoBehaviour
 
 
         Vector3 targetVelocity = worldDirection * processedSpeed; // Target Velo Calcs
-        
-        
+
+
         float currentDrag = isGrounded ? groundDrag : airDrag; // Applying drag
         float dragMultiplier = 1f - (currentDrag * Time.deltaTime);
-        
-        
+
+
         velocity.x = Mathf.Lerp(velocity.x, targetVelocity.x, currentDrag * Time.deltaTime); // Smoothing movment
         velocity.z = Mathf.Lerp(velocity.z, targetVelocity.z, currentDrag * Time.deltaTime);
-        
-        
+
+
         velocity.y += gravity * Time.deltaTime; // Grav
 
         if (isGrounded && velocity.y < 0)
@@ -107,7 +106,7 @@ public class PlayerMotor : MonoBehaviour
 
         controller.Move(velocity * Time.deltaTime);
     }
-    
+
     public void SetSprint(bool Sprinting)
     {
         if (isGrounded && !isCrouching)
