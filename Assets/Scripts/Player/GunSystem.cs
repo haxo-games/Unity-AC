@@ -53,7 +53,7 @@ public class GunSystem : MonoBehaviour
             Debug.Log(rayHit.collider.name);
 
             if (rayHit.collider.CompareTag("Enemy"))
-                rayHit.collider.GetComponent<MeshCollider>();
+                rayHit.collider.GetComponent<HealthLogic>().takeDamage(damage);
                 //rayHit.collider.GetComponent<MeshCollider>().TakeDamage(damage);
         }
 
