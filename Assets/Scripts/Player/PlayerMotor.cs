@@ -14,6 +14,8 @@ public class PlayerMotor : MonoBehaviour
 
     bool wasMoving;
     AudioSource footstepsAudioSource;
+    float movementTimer; // Timer to track how long player has been moving
+    bool footstepsStarted;
 
     float speed = 5f;
     float gravity = -9.81f;
@@ -21,6 +23,7 @@ public class PlayerMotor : MonoBehaviour
     float groundDrag = 10f;
     float airDrag = 2f;
     float sprintSpeed = 8f;
+    float footstepsDelay = 0.3f;
 
     [SerializeField] AudioClip crouchAudioClip;
     [SerializeField] AudioClip uncrouchAudioClip;
@@ -32,6 +35,18 @@ public class PlayerMotor : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
+
+        // Load the jump.ogg file for both jumping and footsteps
+        AudioClip jumpOggClip = Resources.Load<AudioClip>("assets/audio/jump");
+        if (jumpOggClip == null)
+        {
+            Debug.LogWarning("Could not load jump.ogg from assets/audio/jump. Make sure the file is in Resources/assets/audio/ folder.");
+        }
+        else
+        {
+            jumpAudioClip = jumpOggClip;
+            footstepsAudioClip = jumpOggClip;
+        }
     }
 
     void Update()
@@ -108,6 +123,9 @@ public class PlayerMotor : MonoBehaviour
     {
         if (isMoving)
         {
+            // Increment movement timer
+            movementTimer += Time.deltaTime;
+
             float pitchMultiplier = 1f;
             float volume = 0.4f;
 
@@ -122,31 +140,36 @@ public class PlayerMotor : MonoBehaviour
                 volume = 0.5f;
             }
 
-            // Check if we need to start footsteps audio
-            if (footstepsAudioSource == null)
+            // Only start footsteps after 500ms of movement
+            if (movementTimer >= footstepsDelay && !footstepsStarted)
             {
-                footstepsAudioSource = SfxManager.instance.PlaySoundHandled(footstepsAudioClip, transform, volume);
-                if (footstepsAudioSource != null)
+                footstepsStarted = true;
+
+                // Start the looped footsteps audio
+                if (footstepsAudioSource == null && footstepsAudioClip != null)
                 {
-                    footstepsAudioSource.loop = true;
-                    footstepsAudioSource.pitch = pitchMultiplier;
+                    footstepsAudioSource = SfxManager.instance.PlaySoundHandled(footstepsAudioClip, transform, volume);
+                    if (footstepsAudioSource != null)
+                    {
+                        footstepsAudioSource.loop = true;
+                        footstepsAudioSource.pitch = pitchMultiplier;
+                    }
                 }
             }
-            else
+            else if (footstepsStarted && footstepsAudioSource != null)
             {
-                // Update existing footsteps audio
                 footstepsAudioSource.volume = volume;
                 footstepsAudioSource.pitch = pitchMultiplier;
 
-                // Ensure it's still playing (in case it stopped for some reason)
                 if (!footstepsAudioSource.isPlaying)
-                {
                     footstepsAudioSource.Play();
-                }
             }
         }
         else
         {
+            movementTimer = 0f;
+            footstepsStarted = false;
+
             // Stop footsteps when not moving
             if (footstepsAudioSource != null)
             {
