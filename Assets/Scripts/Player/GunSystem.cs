@@ -151,36 +151,51 @@ public class GunSystem : MonoBehaviour
                 audioSource.PlayOneShot(reloadSound, reloadSoundVolume);
         }
 
-        // Shoot continuously while holding mouse button and have bullets
-        if (readyToShoot && shooting && !reloading && bulletsLeft > 0)
+        
+        if (readyToShoot && shooting && !reloading && bulletsLeft > 0) // full auto 
             Shoot();
     }
 
     private void Shoot()
+{
+    readyToShoot = false;
+
+    if (audioSource != null && shootSound != null)
+        audioSource.PlayOneShot(shootSound, shootSoundVolume);
+
+    ApplyRecoil();
+    ApplyPlayerRecoil();
+    ShowMuzzleFlash();
+
+    if (fpsCam == null) // Error check while changing scenes can be deleted later
     {
-        readyToShoot = false;
-
-        if (audioSource != null && shootSound != null)
-            audioSource.PlayOneShot(shootSound, shootSoundVolume);
-
-        ApplyRecoil();
-
-        ApplyPlayerRecoil();
-
-        ShowMuzzleFlash();
-
-        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out rayHit, range, whatIsEnemy))
-        {
-            Debug.Log(rayHit.collider.name);
-            if (rayHit.collider.CompareTag("Enemy"))
-                rayHit.collider.GetComponent<HealthLogic>().takeDamage(damage);
-        }
-
-        bulletsLeft--;
-        bulletsShot++;
-
-        Invoke("ResetShots", timeBetweenShots);
+        Debug.LogError("FPS Camera is not assigned!");
+        return;
     }
+
+    if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out rayHit, range, whatIsEnemy))
+    {
+        Debug.Log(rayHit.collider.name);
+        
+        if (rayHit.collider.CompareTag("Enemy"))
+        {
+            HealthLogic healthLogic = rayHit.collider.GetComponent<HealthLogic>();
+            if (healthLogic != null)
+            {
+                healthLogic.takeDamage(damage);
+            }
+            else // Null check
+            {
+                Debug.LogWarning($"Enemy {rayHit.collider.name} doesn't have a HealthLogic component!");
+            }
+        }
+    }
+
+    bulletsLeft--;
+    bulletsShot++;
+
+    Invoke("ResetShots", timeBetweenShots);
+}
 
     private void ApplyPlayerRecoil()
     {
