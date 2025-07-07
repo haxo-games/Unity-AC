@@ -381,11 +381,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 5
-  fireRate: 0.4
+  fireRate: 0.05
   spread: 0
   range: 100
-  reloadTime: 1
-  timeBetweenShots: 0.1
+  reloadTime: 1.8
+  timeBetweenShots: 0.15
   magazingSize: 30
   bulletperTap: 1
   allowButtonHold: 1
@@ -395,6 +395,15 @@ MonoBehaviour:
   reloadSlideDistance: 1
   reloadMotionSpeed: 8
   slideDownTime: 1.5
+  muzzleFlashPrefab: {fileID: 3440652160077263145, guid: dc2322e8388fb0b41859c412dd3f81f8, type: 3}
+  muzzleFlashDuration: 0.05
+  muzzleFlashDistance: 2
+  muzzleFlashOffset: {x: 0.25, y: -0.3, z: 0}
+  muzzleFlashScale: 0.3
+  wallLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  minFlashDistance: 0.3
   fpsCam: {fileID: 592697344}
   attackPoint: {fileID: 0}
   whatIsEnemy:
@@ -404,6 +413,27 @@ MonoBehaviour:
   reloadSound: {fileID: 8300000, guid: f4297ca2e17694c4b92e3498377de385, type: 3}
   shootSoundVolume: 0.1
   reloadSoundVolume: 0.1
+--- !u!65 &567670041
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567670038}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 1
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.13953134, y: 0.6284377, z: 0.12687515}
+  m_Center: {x: -0.019769453, y: 0.33812416, z: -0.09859383}
 --- !u!20 &592697344 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 5713061051739265275, guid: 942f32093ec69e64cbbfac4b9447c555, type: 3}
@@ -1692,6 +1722,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Gun
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2333cc4ff67ca884c902fa158945ef2b, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1699,6 +1733,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2333cc4ff67ca884c902fa158945ef2b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 567670040}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2333cc4ff67ca884c902fa158945ef2b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 567670041}
   m_SourcePrefab: {fileID: 100100000, guid: 2333cc4ff67ca884c902fa158945ef2b, type: 3}
 --- !u!1 &1537872534 stripped
 GameObject:
@@ -2354,7 +2391,7 @@ MeshCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 5
   m_Convex: 0
@@ -2762,7 +2799,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5713061051739265275, guid: 942f32093ec69e64cbbfac4b9447c555, type: 3}
       propertyPath: m_CullingMask.m_Bits
-      value: 119
+      value: 247
       objectReference: {fileID: 0}
     - target: {fileID: 5713061051739265275, guid: 942f32093ec69e64cbbfac4b9447c555, type: 3}
       propertyPath: m_projectionMatrixMode

@@ -21,6 +21,16 @@ public class GunSystem : MonoBehaviour
     public float reloadMotionSpeed = 8f;
     public float slideDownTime = 1.5f; // Time to stay down before sliding up
 
+    // Muzzle Flash Settings
+    [Header("Muzzle Flash Settings")]
+    public GameObject muzzleFlashPrefab; // Assign your muzzle flash prefab
+    public float muzzleFlashDuration = 0.05f; // How long the flash lasts
+    public float muzzleFlashDistance = 2f; // Distance from camera
+    public Vector3 muzzleFlashOffset = new Vector3(0, 0, 0); // Position offset (X=right, Y=up, Z=forward)
+    public float muzzleFlashScale = 1f; // Scale of the muzzle flash
+    public LayerMask wallLayers = -1; // What layers count as walls for collision check
+    public float minFlashDistance = 0.3f; // Minimum distance to keep flash visible
+
     // Cases
     bool shooting, readyToShoot, reloading;
 
@@ -34,6 +44,10 @@ public class GunSystem : MonoBehaviour
     private bool isReloadAnimating;
     private bool isSlideUp; // Track if we're sliding up or down
     private bool forceFinishReload; // Force reload to finish smoothly
+
+    // Muzzle Flash Variables
+    private GameObject currentMuzzleFlash;
+    private float muzzleFlashTimer;
 
     // References
     public Camera fpsCam;
@@ -71,6 +85,7 @@ public class GunSystem : MonoBehaviour
         isSlideUp = false;
         reloadTargetOffset = Vector3.zero;
         forceFinishReload = false;
+        muzzleFlashTimer = 0f;
     }
 
     private void Update()
@@ -78,6 +93,7 @@ public class GunSystem : MonoBehaviour
         MyInput();
         HandleRecoil();
         HandleReloadAnimation();
+        HandleMuzzleFlash();
     }
 
     private void MyInput()
@@ -108,6 +124,9 @@ public class GunSystem : MonoBehaviour
         // Apply recoil
         ApplyRecoil();
 
+        // Show muzzle flash
+        ShowMuzzleFlash();
+
         // Raycast Bullet
         if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out rayHit, range, whatIsEnemy))
         {
@@ -121,6 +140,99 @@ public class GunSystem : MonoBehaviour
 
         // Reset shots after time between shots
         Invoke("ResetShots", timeBetweenShots);
+    }
+
+    private void ShowMuzzleFlash()
+    {
+        if (muzzleFlashPrefab == null || fpsCam == null) return;
+
+        // Remove any existing muzzle flash
+        if (currentMuzzleFlash != null)
+        {
+            Destroy(currentMuzzleFlash);
+        }
+
+        // Calculate position relative to camera instead of attack point
+        Vector3 cameraPosition = fpsCam.transform.position;
+        Vector3 forwardDirection = fpsCam.transform.forward;
+        Vector3 rightDirection = fpsCam.transform.right;
+        Vector3 upDirection = fpsCam.transform.up;
+
+        // Apply offset in camera space (more predictable)
+        Vector3 offsetInWorldSpace = rightDirection * muzzleFlashOffset.x +
+                                    upDirection * muzzleFlashOffset.y +
+                                    forwardDirection * muzzleFlashOffset.z;
+
+        Vector3 desiredPosition = cameraPosition + forwardDirection * muzzleFlashDistance + offsetInWorldSpace;
+
+        // Check for wall collision and get both position and scale factor
+        var flashData = GetValidFlashPositionAndScale(desiredPosition, cameraPosition);
+
+        // Create muzzle flash
+        currentMuzzleFlash = Instantiate(muzzleFlashPrefab, flashData.position, fpsCam.transform.rotation);
+
+        // Parent it to the camera so it follows naturally
+        currentMuzzleFlash.transform.SetParent(fpsCam.transform);
+
+        // Apply scale with distance compensation
+        currentMuzzleFlash.transform.localScale = Vector3.one * muzzleFlashScale * flashData.scaleFactor;
+
+        // Randomize Z rotation only
+        Vector3 currentRotation = currentMuzzleFlash.transform.eulerAngles;
+        currentMuzzleFlash.transform.eulerAngles = new Vector3(currentRotation.x, currentRotation.y, Random.Range(0, 360));
+
+        // Start the flash timer
+        muzzleFlashTimer = muzzleFlashDuration;
+    }
+
+    private (Vector3 position, float scaleFactor) GetValidFlashPositionAndScale(Vector3 desiredPosition, Vector3 startPosition)
+    {
+        Vector3 directionToFlash = (desiredPosition - startPosition).normalized;
+        float desiredDistance = Vector3.Distance(startPosition, desiredPosition);
+
+        // Raycast from camera position to desired position to check for walls
+        RaycastHit hit;
+        if (Physics.Raycast(startPosition, directionToFlash, out hit, desiredDistance, wallLayers))
+        {
+            // Wall detected - calculate safe distance
+            float actualDistance = Mathf.Max(hit.distance - 0.1f, minFlashDistance);
+
+            // Calculate the scale factor based on distance ratio
+            float distanceRatio = actualDistance / desiredDistance;
+
+            // Maintain the original offset proportionally
+            // Instead of just moving along the direction, scale the entire offset vector
+            Vector3 originalOffset = desiredPosition - startPosition;
+            Vector3 scaledOffset = originalOffset * distanceRatio;
+            Vector3 finalPosition = startPosition + scaledOffset;
+
+            // Calculate scale factor to maintain consistent visual size
+            float scaleFactor = distanceRatio;
+
+            return (finalPosition, scaleFactor);
+        }
+
+        // No wall detected - use desired position with normal scale
+        return (desiredPosition, 1f);
+    }
+
+    private void HandleMuzzleFlash()
+    {
+        // Handle muzzle flash timer
+        if (muzzleFlashTimer > 0)
+        {
+            muzzleFlashTimer -= Time.deltaTime;
+
+            // Since it's parented to camera, we don't need to update position/rotation manually
+            // The parenting handles smooth following automatically
+
+            // If timer expired, destroy the muzzle flash
+            if (muzzleFlashTimer <= 0 && currentMuzzleFlash != null)
+            {
+                Destroy(currentMuzzleFlash);
+                currentMuzzleFlash = null;
+            }
+        }
     }
 
     private void ApplyRecoil()
