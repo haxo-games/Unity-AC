@@ -7,7 +7,7 @@ public class HealthLogic : MonoBehaviour
     [SerializeField] AudioClip[] painClipsArray;
     
     [Header("Death Settings")]
-    [SerializeField] float deathDelay = 0.2f; // Time for death, like when kill until deletion
+    [SerializeField] float deathDelay = 2; // Time for death, like when kill until deletion
     [SerializeField] bool useDeathDelay = true; 
 
     public int health = 100;

@@ -79,6 +79,14 @@ public class GunSystem : MonoBehaviour
     [Range(0f, 1f)]
     public float reloadSoundVolume = 0.1f;
 
+    // Camera shake
+    [Header("Camera Shake Settings")]
+    [SerializeField] private CamShake camShake; //
+    [SerializeField] private float shakeDuration = 0.1f;
+    [SerializeField] private float shakeMagnitude = 0.3f;
+    [SerializeField] private float screenKick = 1f;
+
+
     private void Awake()
     {
         bulletsLeft = magazingSize;
@@ -106,6 +114,16 @@ public class GunSystem : MonoBehaviour
         playerRecoilTimer = 0f;
 
         FindPlayerReferences();
+
+        if (camShake == null && fpsCam != null)
+        {
+            camShake = fpsCam.GetComponent<CamShake>();
+        }
+
+        if (camShake == null)
+        {
+            Debug.LogWarning("CamShake component not found! Camera shake won't work.");
+        }
     }
 
     private void FindPlayerReferences()
@@ -166,12 +184,17 @@ public class GunSystem : MonoBehaviour
     ApplyRecoil();
     ApplyPlayerRecoil();
     ShowMuzzleFlash();
+    
+    if (camShake != null)
+        {
+            StartCoroutine(camShake.Shake(shakeDuration, shakeMagnitude));
+        }
 
     if (fpsCam == null) // Error check while changing scenes can be deleted later
-    {
-        Debug.LogError("FPS Camera is not assigned!");
-        return;
-    }
+        {
+            Debug.LogError("FPS Camera is not assigned!");
+            return;
+        }
 
     if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out rayHit, range, whatIsEnemy))
     {
