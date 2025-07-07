@@ -122,7 +122,8 @@ public class PlayerMotor : MonoBehaviour
                 volume = 0.5f;
             }
 
-            if (footstepsAudioSource == null || !footstepsAudioSource.isPlaying)
+            // Check if we need to start footsteps audio
+            if (footstepsAudioSource == null)
             {
                 footstepsAudioSource = SfxManager.instance.PlaySoundHandled(footstepsAudioClip, transform, volume);
                 if (footstepsAudioSource != null)
@@ -133,16 +134,26 @@ public class PlayerMotor : MonoBehaviour
             }
             else
             {
+                // Update existing footsteps audio
                 footstepsAudioSource.volume = volume;
                 footstepsAudioSource.pitch = pitchMultiplier;
+
+                // Ensure it's still playing (in case it stopped for some reason)
+                if (!footstepsAudioSource.isPlaying)
+                {
+                    footstepsAudioSource.Play();
+                }
             }
         }
-        else if (footstepsAudioSource != null)
+        else
         {
-            footstepsAudioSource.Stop();
-            Destroy(footstepsAudioSource.gameObject);
-            footstepsAudioSource = null;
-
+            // Stop footsteps when not moving
+            if (footstepsAudioSource != null)
+            {
+                footstepsAudioSource.Stop();
+                Destroy(footstepsAudioSource.gameObject);
+                footstepsAudioSource = null;
+            }
         }
 
         wasMoving = isMoving;

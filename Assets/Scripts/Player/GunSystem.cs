@@ -12,6 +12,7 @@ public class GunSystem : MonoBehaviour
 
     // Cases
     bool shooting, readyToShoot, reloading;
+    bool mousePressed; // Track if mouse was just pressed
 
     // References
     public Camera fpsCam;
@@ -19,30 +20,61 @@ public class GunSystem : MonoBehaviour
     public RaycastHit rayHit;
     public LayerMask whatIsEnemy;
 
+    // Audio
+    private AudioSource audioSource;
+    public AudioClip shootSound;
+    public AudioClip reloadSound;
+    [Range(0f, 1f)]
+    public float shootSoundVolume = 0.1f;
+    [Range(0f, 1f)]
+    public float reloadSoundVolume = 0.1f;
+
     private void Awake()
     {
         bulletsLeft = magazingSize;
         readyToShoot = true;
+
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
+        
+
+        if (shootSound == null)
+            shootSound = Resources.Load<AudioClip>("Audio/auto");
+
+        if (reloadSound == null)
+            reloadSound = Resources.Load<AudioClip>("Audio/auto_reload");
     }
 
     private void Update()
     {
         MyInput();
-    } 
+    }
 
     private void MyInput()
     {
         if (allowButtonHold) shooting = Input.GetKey(KeyCode.Mouse0);
         else shooting = Input.GetKeyDown(KeyCode.Mouse0);
 
-        if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazingSize && !reloading) Reload();
+        mousePressed = Input.GetKeyDown(KeyCode.Mouse0);
 
-        // Shooting Check
-        if (readyToShoot && shooting && !reloading && bulletsLeft > 0)
+        if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazingSize && !reloading)
         {
-            Shoot();
+            Reload();
+            if (audioSource != null && reloadSound != null)
+                audioSource.PlayOneShot(reloadSound, reloadSoundVolume);
+            
         }
+
+        if (mousePressed)
+            if (audioSource != null && shootSound != null)
+                audioSource.PlayOneShot(shootSound, shootSoundVolume);
+
+        if (readyToShoot && shooting && !reloading && bulletsLeft > 0)
+            Shoot();
+        
     }
+
     private void Shoot()
     {
         readyToShoot = false;
@@ -51,12 +83,9 @@ public class GunSystem : MonoBehaviour
         if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out rayHit, range, whatIsEnemy))
         {
             Debug.Log(rayHit.collider.name);
-
             if (rayHit.collider.CompareTag("Enemy"))
                 rayHit.collider.GetComponent<HealthLogic>().takeDamage(damage);
-                //rayHit.collider.GetComponent<MeshCollider>().TakeDamage(damage);
         }
-
 
         bulletsLeft--;
         Invoke("ResetShots", timeBetweenShots);
@@ -78,5 +107,4 @@ public class GunSystem : MonoBehaviour
         bulletsLeft = magazingSize;
         reloading = false;
     }
-
 }
