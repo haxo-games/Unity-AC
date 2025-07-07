@@ -392,6 +392,9 @@ MonoBehaviour:
   recoilForce: 0.05
   recoilDuration: 0.1
   recoilRecoverySpeed: 25
+  playerRecoilForce: 0.1
+  playerRecoilDuration: 0.2
+  playerRecoilRecoverySpeed: 10
   reloadSlideDistance: 1
   reloadMotionSpeed: 8
   slideDownTime: 1.5
@@ -1724,7 +1727,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 2333cc4ff67ca884c902fa158945ef2b, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2799,7 +2802,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5713061051739265275, guid: 942f32093ec69e64cbbfac4b9447c555, type: 3}
       propertyPath: m_CullingMask.m_Bits
-      value: 247
+      value: 119
       objectReference: {fileID: 0}
     - target: {fileID: 5713061051739265275, guid: 942f32093ec69e64cbbfac4b9447c555, type: 3}
       propertyPath: m_projectionMatrixMode
