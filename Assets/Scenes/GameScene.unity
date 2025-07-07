@@ -380,7 +380,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 875b9b89cf6b99045a020dad9eb66d43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 5
+  damage: 20
   fireRate: 0.05
   spread: 0
   range: 100
@@ -1795,6 +1795,24 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1537872538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1537872534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87e8101f60838a748b42cfe942679ac4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dieClipsArray: []
+  painClipsArray: []
+  deathDelay: 2
+  useDeathDelay: 1
+  health: 100
+  armor: 1
 --- !u!1001 &1613695700
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2594,8 +2612,16 @@ PrefabInstance:
       value: Dummy Red
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 8b4dc26efa968ca478548a432b4d460c, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8b4dc26efa968ca478548a432b4d460c, type: 3}
       propertyPath: m_TagString
       value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 1635574816639542815, guid: 8b4dc26efa968ca478548a432b4d460c, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -2609,6 +2635,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8b4dc26efa968ca478548a432b4d460c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1537872535}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8b4dc26efa968ca478548a432b4d460c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1537872538}
   m_SourcePrefab: {fileID: 100100000, guid: 8b4dc26efa968ca478548a432b4d460c, type: 3}
 --- !u!1 &2118621479 stripped
 GameObject:
@@ -2713,6 +2742,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: c0a4da26825508d4384c327d3e9f4d5d, type: 3}
   - {fileID: 8300000, guid: dbf5197b271259242abe303292a427e3, type: 3}
   - {fileID: 8300000, guid: 9696210979cd8f64ebf9a265effaeacf, type: 3}
+  deathDelay: 2
+  useDeathDelay: 1
   health: 100
   armor: 0
 --- !u!4 &2118621497 stripped
