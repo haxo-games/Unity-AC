@@ -15,6 +15,12 @@ public class GunSystem : MonoBehaviour
     public float recoilDuration = 0.1f;
     public float recoilRecoverySpeed = 25f;
 
+    // Player Recoil Settings
+    [Header("Player Recoil Settings")]
+    public float playerRecoilForce = 0.1f; // How much the player moves backward
+    public float playerRecoilDuration = 0.2f; // How long the backward movement lasts
+    public float playerRecoilRecoverySpeed = 10f; // How quickly player recovers position
+
     // Reload Animation Settings
     [Header("Reload Animation Settings")]
     public float reloadSlideDistance = 1f;
@@ -39,6 +45,11 @@ public class GunSystem : MonoBehaviour
     private Vector3 currentRecoilOffset;
     private float recoilTimer;
 
+    // Player Recoil Variables
+    private Vector3 playerOriginalPosition;
+    private Vector3 currentPlayerRecoilOffset;
+    private float playerRecoilTimer;
+
     // Reload Animation Variables
     private Vector3 reloadTargetOffset;
     private bool isReloadAnimating;
@@ -54,6 +65,10 @@ public class GunSystem : MonoBehaviour
     public Transform attackPoint;
     public RaycastHit rayHit;
     public LayerMask whatIsEnemy;
+
+    // Player Reference (automatically finds the player)
+    private Transform playerTransform;
+    private CharacterController playerController;
 
     // Audio
     private AudioSource audioSource;
@@ -86,12 +101,46 @@ public class GunSystem : MonoBehaviour
         reloadTargetOffset = Vector3.zero;
         forceFinishReload = false;
         muzzleFlashTimer = 0f;
+
+        // Initialize player recoil variables
+        currentPlayerRecoilOffset = Vector3.zero;
+        playerRecoilTimer = 0f;
+
+        // Find player transform and controller
+        FindPlayerReferences();
+    }
+
+    private void FindPlayerReferences()
+    {
+        // Try to find player by tag first
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null)
+        {
+            playerTransform = playerObj.transform;
+            playerController = playerObj.GetComponent<CharacterController>();
+        }
+        else
+        {
+            // If no player tag, try to find by looking for CharacterController
+            playerController = Object.FindFirstObjectByType<CharacterController>();
+            if (playerController != null)
+            {
+                playerTransform = playerController.transform;
+            }
+        }
+
+        // Store original player position if found
+        if (playerTransform != null)
+        {
+            playerOriginalPosition = playerTransform.position;
+        }
     }
 
     private void Update()
     {
         MyInput();
         HandleRecoil();
+        HandlePlayerRecoil();
         HandleReloadAnimation();
         HandleMuzzleFlash();
     }
@@ -124,6 +173,9 @@ public class GunSystem : MonoBehaviour
         // Apply recoil
         ApplyRecoil();
 
+        // Apply player recoil (backward movement)
+        ApplyPlayerRecoil();
+
         // Show muzzle flash
         ShowMuzzleFlash();
 
@@ -140,6 +192,42 @@ public class GunSystem : MonoBehaviour
 
         // Reset shots after time between shots
         Invoke("ResetShots", timeBetweenShots);
+    }
+
+    private void ApplyPlayerRecoil()
+    {
+        if (playerTransform == null || fpsCam == null) return;
+
+        // Calculate backward direction (opposite to camera forward)
+        Vector3 recoilDirection = -fpsCam.transform.forward;
+
+        // Only use horizontal movement (remove Y component for ground-based movement)
+        recoilDirection.y = 0;
+        recoilDirection = recoilDirection.normalized;
+
+        // Apply recoil force
+        Vector3 recoilMovement = recoilDirection * playerRecoilForce;
+
+        // If using CharacterController, use Move method
+        if (playerController != null)
+        {
+            playerController.Move(recoilMovement);
+        }
+        else
+        {
+            // If no CharacterController, directly modify position
+            playerTransform.position += recoilMovement;
+        }
+
+        // Set timer for recoil duration
+        playerRecoilTimer = playerRecoilDuration;
+    }
+
+    private void HandlePlayerRecoil()
+    {
+        if (playerRecoilTimer > 0)
+            playerRecoilTimer -= Time.deltaTime;
+        
     }
 
     private void ShowMuzzleFlash()
@@ -200,7 +288,6 @@ public class GunSystem : MonoBehaviour
             // Calculate the scale factor based on distance ratio
             float distanceRatio = actualDistance / desiredDistance;
 
-            // Maintain the original offset proportionally
             // Instead of just moving along the direction, scale the entire offset vector
             Vector3 originalOffset = desiredPosition - startPosition;
             Vector3 scaledOffset = originalOffset * distanceRatio;
@@ -222,9 +309,6 @@ public class GunSystem : MonoBehaviour
         if (muzzleFlashTimer > 0)
         {
             muzzleFlashTimer -= Time.deltaTime;
-
-            // Since it's parented to camera, we don't need to update position/rotation manually
-            // The parenting handles smooth following automatically
 
             // If timer expired, destroy the muzzle flash
             if (muzzleFlashTimer <= 0 && currentMuzzleFlash != null)
