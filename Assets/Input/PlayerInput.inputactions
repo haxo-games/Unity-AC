@@ -231,7 +231,7 @@
                 {
                     "name": "",
                     "id": "2253c9d5-4042-4a95-94ea-ea1a5626972c",
-                    "path": "<Keyboard>/e",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -278,7 +278,7 @@
                     "name": "Cancel",
                     "type": "Button",
                     "id": "b7af2888-25a3-4697-bf91-2ccf3bffe761",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -342,6 +342,15 @@
                     "type": "PassThrough",
                     "id": "1c838c11-a203-4d08-a69c-6fc859de609f",
                     "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MainMenu",
+                    "type": "Button",
+                    "id": "1f89adb2-30d6-4be4-a829-0a7c8d82f8a0",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -763,6 +772,28 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d2bbba7a-ad63-4d62-a210-529125f1354e",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MainMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "44bfd6eb-7df8-4fb5-95ea-fc12f0e35be7",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MainMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

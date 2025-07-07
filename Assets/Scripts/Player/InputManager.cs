@@ -4,6 +4,7 @@ public class InputManager : MonoBehaviour
 {
     PlayerMotor playerMotor;
     PlayerLook playerLook;
+    PlayerUI playerUI;
 
     public PlayerInput playerInput;
 
@@ -13,10 +14,25 @@ public class InputManager : MonoBehaviour
 
         playerMotor = GetComponent<PlayerMotor>();
         playerLook = GetComponent<PlayerLook>();
+        playerUI = GetComponent<PlayerUI>();
 
         playerInput.OnFoot.Jump.performed += ctx => playerMotor.Jump();
         playerInput.OnFoot.Crouch.performed += ctx => playerMotor.ToggleCrouch();
         playerInput.OnFoot.Crouch.canceled += ctx => playerMotor.ToggleCrouch();
+
+        playerInput.UI.MainMenu.performed += ctx => HandleToggleMainMenu();
+    }
+
+    void HandleToggleMainMenu()
+    {
+        Debug.Log("TEST");
+
+        playerUI.ToggleMainMenu();
+
+        if (playerUI.isMainMenuOpen)
+            OnDisable();
+        else
+            OnEnable();
     }
 
     void FixedUpdate()

@@ -21,7 +21,7 @@ public class PlayerInteract : MonoBehaviour
     {
         Ray ray = new Ray(cam.transform.position, cam.transform.forward);
 
-        playerUI.SetInteractText(String.Empty);
+        playerUI.SetInteractText(string.Empty);
 
         RaycastHit hitInfo;
         if (Physics.Raycast(ray, out hitInfo, distance, mask))
