@@ -380,7 +380,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 875b9b89cf6b99045a020dad9eb66d43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 20
+  damage: 17
   fireRate: 0.05
   spread: 0
   range: 100
@@ -389,7 +389,7 @@ MonoBehaviour:
   magazingSize: 30
   bulletperTap: 1
   allowButtonHold: 1
-  recoilForce: 0.05
+  recoilForce: 0
   recoilDuration: 0.1
   recoilRecoverySpeed: 25
   playerRecoilForce: 0.1
@@ -416,6 +416,10 @@ MonoBehaviour:
   reloadSound: {fileID: 8300000, guid: f4297ca2e17694c4b92e3498377de385, type: 3}
   shootSoundVolume: 0.1
   reloadSoundVolume: 0.1
+  camShake: {fileID: 0}
+  shakeDuration: 0.15
+  shakeMagnitude: 1
+  screenKick: 2
 --- !u!65 &567670041
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -915,6 +919,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1046302875}
   m_CullTransparentMesh: 1
+--- !u!1 &1096555762 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6089507572290039867, guid: 942f32093ec69e64cbbfac4b9447c555, type: 3}
+  m_PrefabInstance: {fileID: 7647243992470524683}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1096555765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1096555762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47f410b2ae5e0a347baf1df76cd1eeb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1187535586
 GameObject:
   m_ObjectHideFlags: 0
@@ -1810,7 +1831,7 @@ MonoBehaviour:
   dieClipsArray: []
   painClipsArray: []
   deathDelay: 2
-  useDeathDelay: 1
+  useDeathDelay: 0
   health: 100
   armor: 1
 --- !u!1001 &1613695700
@@ -2867,6 +2888,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 221149019153729869, guid: 942f32093ec69e64cbbfac4b9447c555, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2118621493}
+    - targetCorrespondingSourceObject: {fileID: 6089507572290039867, guid: 942f32093ec69e64cbbfac4b9447c555, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1096555765}
   m_SourcePrefab: {fileID: 100100000, guid: 942f32093ec69e64cbbfac4b9447c555, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
