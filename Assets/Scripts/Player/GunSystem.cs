@@ -258,23 +258,26 @@ public class GunSystem : MonoBehaviour
     }
 
     private void HandleCameraRecoil()
-    {
-        if (playerLook == null) return;
+{
+    if (playerLook == null) return;
 
-        Vector3 currentRecoilOffset = playerLook.GetRecoilOffset();
-        
-        if (wasShooting && !shooting)
-            targetCameraRecoil += new Vector3(2.3f, 0, 0);
-        
-        // Update wasShooting for next frame
-        wasShooting = shooting;
-        
-        // Smoothly move to target recoil position
-        Vector3 newRecoilOffset = Vector3.SmoothDamp(currentRecoilOffset, targetCameraRecoil, ref recoilVelocity, 1f / recoilBuildupSpeed);
-        
-        // Apply the recoil
-        playerLook.SetRecoilOffset(newRecoilOffset);
+    Vector3 currentRecoilOffset = playerLook.GetRecoilOffset();
+    
+    if (wasShooting && !shooting)
+    {
+        // Add upward recoil when shot ends
+        targetCameraRecoil += new Vector3(2.3f, 0, 0);
     }
+    
+    // Remove the recovery code - let it stay at the recoiled position
+    // No lerping back to zero or drifting down
+    
+    wasShooting = shooting;
+    
+    Vector3 newRecoilOffset = Vector3.SmoothDamp(currentRecoilOffset, targetCameraRecoil, ref recoilVelocity, 0.1f);
+    
+    playerLook.SetRecoilOffset(newRecoilOffset);
+}
 
     private void ShowMuzzleFlash()
     {
