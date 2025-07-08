@@ -31,10 +31,10 @@ public class PlayerMovement : MonoBehaviour
     public float playerRecoilDuration = 0.2f;
     public float playerRecoilRecoverySpeed = 20f;
     [Header("Player Physics")]
-    public float playerMass = 70f; // Player mass in kg for realistic recoil
-    public float baselineMass = 70f; // Baseline mass for recoil calculations
-    public float maxVerticalRecoil = 0.1f; // Maximum upward recoil regardless of shot angle
-    public float gravityResistance = 0.8f; // How much gravity affects vertical recoil (0-1)
+    public float playerMass = 70f; 
+    public float baselineMass = 70f;
+    public float maxVerticalRecoil = 0.1f;
+    public float gravityResistance = 0.8f;
 
     // Player Recoil Variables
     private Vector3 playerOriginalPosition;
