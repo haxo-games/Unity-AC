@@ -416,10 +416,6 @@ MonoBehaviour:
   reloadSound: {fileID: 8300000, guid: f4297ca2e17694c4b92e3498377de385, type: 3}
   shootSoundVolume: 0.1
   reloadSoundVolume: 0.1
-  camShake: {fileID: 0}
-  shakeDuration: 0.15
-  shakeMagnitude: 1
-  screenKick: 2
 --- !u!65 &567670041
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -737,7 +733,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -953, y: -790}
+  m_AnchoredPosition: {x: -940, y: -790}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &901772465
@@ -817,7 +813,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -769.99994, y: -790}
+  m_AnchoredPosition: {x: -757.00006, y: -790}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1046302877

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    PlayerMotor playerMotor;
+    PlayerMovement PlayerMovement;
     PlayerLook playerLook;
     PlayerUI playerUI;
 
@@ -12,13 +12,13 @@ public class InputManager : MonoBehaviour
     {
         playerInput = new PlayerInput();
 
-        playerMotor = GetComponent<PlayerMotor>();
+        PlayerMovement = GetComponent<PlayerMovement>();
         playerLook = GetComponent<PlayerLook>();
         playerUI = GetComponent<PlayerUI>();
 
-        playerInput.OnFoot.Jump.performed += ctx => playerMotor.Jump();
-        playerInput.OnFoot.Crouch.performed += ctx => playerMotor.ToggleCrouch();
-        playerInput.OnFoot.Crouch.canceled += ctx => playerMotor.ToggleCrouch();
+        playerInput.OnFoot.Jump.performed += ctx => PlayerMovement.Jump();
+        playerInput.OnFoot.Crouch.performed += ctx => PlayerMovement.ToggleCrouch();
+        playerInput.OnFoot.Crouch.canceled += ctx => PlayerMovement.ToggleCrouch();
 
         playerInput.UI.MainMenu.performed += ctx => HandleToggleMainMenu();
     }
@@ -37,7 +37,7 @@ public class InputManager : MonoBehaviour
 
     void FixedUpdate()
     {
-        playerMotor.ProcessMove(playerInput.OnFoot.Movement.ReadValue<Vector2>());
+        PlayerMovement.ProcessMove(playerInput.OnFoot.Movement.ReadValue<Vector2>());
     }
 
     void LateUpdate()

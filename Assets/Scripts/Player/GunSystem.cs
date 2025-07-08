@@ -15,11 +15,11 @@ public class GunSystem : MonoBehaviour
     public float recoilDuration = 0.1f;
     public float recoilRecoverySpeed = 25f;
 
-    // Player Recoil Settings
-    [Header("Player Recoil Settings")]
-    public float playerRecoilForce = 0.1f;
-    public float playerRecoilDuration = 0.2f;
-    public float playerRecoilRecoverySpeed = 10f;
+    [Header("Camera Recoil Settings")]
+    public float recoilUpAmount = 2.5f;
+    public float recoilSettleAmount = 0.2f;
+    public float recoilSettleSpeed = 3f; 
+    public float recoilBuildupSpeed = 8f;
 
     // Reload Animation Settings
     [Header("Reload Animation Settings")]
@@ -44,11 +44,12 @@ public class GunSystem : MonoBehaviour
     private Vector3 originalPosition;
     private Vector3 currentRecoilOffset;
     private float recoilTimer;
-
-    // Player Recoil Variables
-    private Vector3 playerOriginalPosition;
-    private Vector3 currentPlayerRecoilOffset;
-    private float playerRecoilTimer;
+    
+    // Simple recoil system
+    private Vector3 currentCameraRecoil = Vector3.zero;
+    private Vector3 targetCameraRecoil = Vector3.zero;
+    private Vector3 recoilVelocity = Vector3.zero;
+    private bool wasShooting = false; // Track if we were shooting last frame
 
     // Reload Animation Variables
     private Vector3 reloadTargetOffset;
@@ -66,9 +67,9 @@ public class GunSystem : MonoBehaviour
     public RaycastHit rayHit;
     public LayerMask whatIsEnemy;
 
-    // Player Reference (automatically finds the player)
-    private Transform playerTransform;
-    private CharacterController playerController;
+    // Player Reference (for player recoil)
+    private PlayerMovement PlayerMovement;
+    private PlayerLook playerLook;
 
     // Audio
     private AudioSource audioSource;
@@ -78,13 +79,8 @@ public class GunSystem : MonoBehaviour
     public float shootSoundVolume = 0.1f;
     [Range(0f, 1f)]
     public float reloadSoundVolume = 0.1f;
-
-    // Camera shake
-    [Header("Camera Shake Settings")]
-    [SerializeField] private CamShake camShake; //
-    [SerializeField] private float shakeDuration = 0.1f;
-    [SerializeField] private float shakeMagnitude = 0.3f;
-    [SerializeField] private float screenKick = 1f;
+    private float lastShootSoundTime = 0f;
+    private bool isShootSoundPlaying = false; // Track if shoot sound is currently playing
 
 
     private void Awake()
@@ -110,20 +106,7 @@ public class GunSystem : MonoBehaviour
         forceFinishReload = false;
         muzzleFlashTimer = 0f;
 
-        currentPlayerRecoilOffset = Vector3.zero;
-        playerRecoilTimer = 0f;
-
         FindPlayerReferences();
-
-        if (camShake == null && fpsCam != null)
-        {
-            camShake = fpsCam.GetComponent<CamShake>();
-        }
-
-        if (camShake == null)
-        {
-            Debug.LogWarning("CamShake component not found! Camera shake won't work.");
-        }
     }
 
     private void FindPlayerReferences()
@@ -131,28 +114,28 @@ public class GunSystem : MonoBehaviour
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
         {
-            playerTransform = playerObj.transform;
-            playerController = playerObj.GetComponent<CharacterController>();
+            PlayerMovement = playerObj.GetComponent<PlayerMovement>();
+            playerLook = playerObj.GetComponent<PlayerLook>();
         }
         else
         {
-            playerController = Object.FindFirstObjectByType<CharacterController>();
+            PlayerMovement = Object.FindFirstObjectByType<PlayerMovement>();
             
-            if (playerController != null)
-                playerTransform = playerController.transform;
-            
+            // Try to find PlayerLook if we found a PlayerMovement
+            if (PlayerMovement != null)
+                playerLook = PlayerMovement.GetComponent<PlayerLook>();
         }
 
-        if (playerTransform != null)
-            playerOriginalPosition = playerTransform.position;
-        
+        // If we still don't have PlayerLook, try to find it anywhere
+        if (playerLook == null)
+            playerLook = Object.FindFirstObjectByType<PlayerLook>();
     }
 
     private void Update()
     {
         MyInput();
         HandleRecoil();
-        HandlePlayerRecoil();
+        HandleCameraRecoil();
         HandleReloadAnimation();
         HandleMuzzleFlash();
     }
@@ -166,7 +149,16 @@ public class GunSystem : MonoBehaviour
         {
             Reload();
             if (audioSource != null && reloadSound != null)
-                audioSource.PlayOneShot(reloadSound, reloadSoundVolume);
+            {
+                // Stop any currently playing sound
+                audioSource.Stop();
+                isShootSoundPlaying = false;
+                
+                // Play reload sound
+                audioSource.clip = reloadSound;
+                audioSource.volume = reloadSoundVolume;
+                audioSource.Play();
+            }
         }
 
         
@@ -175,76 +167,113 @@ public class GunSystem : MonoBehaviour
     }
 
     private void Shoot()
-{
-    readyToShoot = false;
+    {
+        readyToShoot = false;
 
-    if (audioSource != null && shootSound != null)
-        audioSource.PlayOneShot(shootSound, shootSoundVolume);
-
-    ApplyRecoil();
-    ApplyPlayerRecoil();
-    ShowMuzzleFlash();
-    
-    if (camShake != null)
+        // Stop any currently playing shoot sound and play the new one
+        if (audioSource != null && shootSound != null)
         {
-            StartCoroutine(camShake.Shake(shakeDuration, shakeMagnitude));
+            // Stop the current sound if it's playing
+            if (isShootSoundPlaying)
+            {
+                audioSource.Stop();
+            }
+            
+            // Play the new shoot sound
+            audioSource.clip = shootSound;
+            audioSource.volume = shootSoundVolume;
+            audioSource.Play();
+            isShootSoundPlaying = true;
+            lastShootSoundTime = Time.time;
+            
+            // Set a timer to reset the playing flag when the sound finishes
+            Invoke("ResetShootSoundFlag", shootSound.length);
         }
 
-    if (fpsCam == null) // Error check while changing scenes can be deleted later
+        ApplyRecoil();
+        ApplyPlayerRecoil();
+        ApplyCameraRecoil();
+        ShowMuzzleFlash();
+
+        if (fpsCam == null) // Error check while changing scenes can be deleted later
         {
             Debug.LogError("FPS Camera is not assigned!");
             return;
         }
 
-    if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out rayHit, range, whatIsEnemy))
-    {
-        Debug.Log(rayHit.collider.name);
-        
-        if (rayHit.collider.CompareTag("Enemy"))
+        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out rayHit, range, whatIsEnemy))
         {
-            HealthLogic healthLogic = rayHit.collider.GetComponent<HealthLogic>();
-            if (healthLogic != null)
+            Debug.Log(rayHit.collider.name);
+            
+            if (rayHit.collider.CompareTag("Enemy"))
             {
-                healthLogic.takeDamage(damage);
-            }
-            else // Null check
-            {
-                Debug.LogWarning($"Enemy {rayHit.collider.name} doesn't have a HealthLogic component!");
+                HealthLogic healthLogic = rayHit.collider.GetComponent<HealthLogic>();
+                if (healthLogic != null)
+                {
+                    healthLogic.takeDamage(damage);
+                }
+                else // Null check
+                {
+                    Debug.LogWarning($"Enemy {rayHit.collider.name} doesn't have a HealthLogic component!");
+                }
             }
         }
+
+        bulletsLeft--;
+        bulletsShot++;
+
+        Invoke("ResetShots", timeBetweenShots);
     }
-
-    bulletsLeft--;
-    bulletsShot++;
-
-    Invoke("ResetShots", timeBetweenShots);
-}
 
     private void ApplyPlayerRecoil()
     {
-        if (playerTransform == null || fpsCam == null) return;
-
-        Vector3 recoilDirection = -fpsCam.transform.forward;
-
-        recoilDirection.y = 0;
-        recoilDirection = recoilDirection.normalized;
-
-        Vector3 recoilMovement = recoilDirection * playerRecoilForce;
-
-        if (playerController != null)
-            playerController.Move(recoilMovement);
-        
-        else
-            playerTransform.position += recoilMovement;
-
-        playerRecoilTimer = playerRecoilDuration;
+        if (PlayerMovement != null && fpsCam != null)
+        {
+            PlayerMovement.ApplyPlayerRecoil(fpsCam);
+        }
     }
 
-    private void HandlePlayerRecoil()
+    private void ApplyCameraRecoil()
     {
-        if (playerRecoilTimer > 0)
-            playerRecoilTimer -= Time.deltaTime;
+        if (playerLook == null)
+        {
+            Debug.LogWarning("PlayerLook component not found! Camera recoil won't work.");
+            return;
+        }
+
+        // Add recoil up per shot
+        targetCameraRecoil += new Vector3(-recoilUpAmount, 0, 0);
+    }
+    
+    // Method to reset camera recoil (useful for reload or after time)
+    public void ResetCameraRecoil()
+    {
+        if (playerLook != null)
+        {
+            currentCameraRecoil = Vector3.zero;
+            targetCameraRecoil = Vector3.zero;
+            recoilVelocity = Vector3.zero;
+            wasShooting = false;
+        }
+    }
+
+    private void HandleCameraRecoil()
+    {
+        if (playerLook == null) return;
+
+        Vector3 currentRecoilOffset = playerLook.GetRecoilOffset();
         
+        if (wasShooting && !shooting)
+            targetCameraRecoil += new Vector3(2.3f, 0, 0);
+        
+        // Update wasShooting for next frame
+        wasShooting = shooting;
+        
+        // Smoothly move to target recoil position
+        Vector3 newRecoilOffset = Vector3.SmoothDamp(currentRecoilOffset, targetCameraRecoil, ref recoilVelocity, 1f / recoilBuildupSpeed);
+        
+        // Apply the recoil
+        playerLook.SetRecoilOffset(newRecoilOffset);
     }
 
     private void ShowMuzzleFlash()
@@ -406,5 +435,11 @@ public class GunSystem : MonoBehaviour
         reloading = false;
 
         forceFinishReload = true;
+    }
+    
+    // Method to reset the shoot sound playing flag
+    private void ResetShootSoundFlag()
+    {
+        isShootSoundPlaying = false;
     }
 }
