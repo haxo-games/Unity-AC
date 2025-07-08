@@ -14,7 +14,7 @@ public class PlayerLook : MonoBehaviour
     public void ProcessLook(Vector2 input)
     {
         xRotation -= input.y * Time.deltaTime * ySensitivity;
-        xRotation = Math.Clamp(xRotation, -90, 90); // Perfect symmetry: straight up to straight down
+        xRotation = Math.Clamp(xRotation, -90, 90);
         
         // Apply base rotation + recoil offset
         Vector3 finalRotation = new Vector3(xRotation, 0, 0) + recoilOffset;

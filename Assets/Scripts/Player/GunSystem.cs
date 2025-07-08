@@ -49,13 +49,13 @@ public class GunSystem : MonoBehaviour
     private Vector3 currentCameraRecoil = Vector3.zero;
     private Vector3 targetCameraRecoil = Vector3.zero;
     private Vector3 recoilVelocity = Vector3.zero;
-    private bool wasShooting = false; // Track if we were shooting last frame
+    private bool wasShooting = false; 
 
     // Reload Animation Variables
     private Vector3 reloadTargetOffset;
     private bool isReloadAnimating;
-    private bool isSlideUp; // Track if we're sliding up or down
-    private bool forceFinishReload; // Force reload to finish smoothly
+    private bool isSlideUp;
+    private bool forceFinishReload;
 
     // Muzzle Flash Variables
     private GameObject currentMuzzleFlash;
@@ -80,7 +80,7 @@ public class GunSystem : MonoBehaviour
     [Range(0f, 1f)]
     public float reloadSoundVolume = 0.1f;
     private float lastShootSoundTime = 0f;
-    private bool isShootSoundPlaying = false; // Track if shoot sound is currently playing
+    private bool isShootSoundPlaying = false;
 
 
     private void Awake()
