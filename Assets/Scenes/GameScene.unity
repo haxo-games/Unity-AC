@@ -478,7 +478,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 150, y: 150}
+  m_SizeDelta: {x: 128, y: 128}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &710059884
 MonoBehaviour:
@@ -1522,15 +1522,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2333cc4ff67ca884c902fa158945ef2b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.018
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2333cc4ff67ca884c902fa158945ef2b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.049
+      value: -0.04
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2333cc4ff67ca884c902fa158945ef2b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.117
+      value: 0.06
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2333cc4ff67ca884c902fa158945ef2b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2703,7 +2703,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5713061051739265275, guid: 942f32093ec69e64cbbfac4b9447c555, type: 3}
       propertyPath: field of view
-      value: 64
+      value: 75
       objectReference: {fileID: 0}
     - target: {fileID: 5713061051739265275, guid: 942f32093ec69e64cbbfac4b9447c555, type: 3}
       propertyPath: m_FocalLength

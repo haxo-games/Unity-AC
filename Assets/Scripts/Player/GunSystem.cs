@@ -18,7 +18,7 @@ public class GunSystem : MonoBehaviour
     [Header("Camera Recoil Settings")]
     public float recoilUpAmount = 2.5f;
     public float recoilSettleAmount = 0.2f;
-    public float recoilSettleSpeed = 3f; 
+    public float recoilSettleSpeed = 3f;
     public float recoilBuildupSpeed = 8f;
 
     // Reload Animation Settings
@@ -30,7 +30,7 @@ public class GunSystem : MonoBehaviour
     // Muzzle Flash Settings
     [Header("Muzzle Flash Settings")]
     public GameObject muzzleFlashPrefab;
-    public float muzzleFlashDuration = 0.05f; 
+    public float muzzleFlashDuration = 0.05f;
     public float muzzleFlashDistance = 2f;
     public Vector3 muzzleFlashOffset = new Vector3(0, 0, 0);
     public float muzzleFlashScale = 1f;
@@ -44,12 +44,12 @@ public class GunSystem : MonoBehaviour
     private Vector3 originalPosition;
     private Vector3 currentRecoilOffset;
     private float recoilTimer;
-    
+
     // Simple recoil system
     private Vector3 currentCameraRecoil = Vector3.zero;
     private Vector3 targetCameraRecoil = Vector3.zero;
     private Vector3 recoilVelocity = Vector3.zero;
-    private bool wasShooting = false; 
+    private bool wasShooting = false;
 
     // Reload Animation Variables
     private Vector3 reloadTargetOffset;
@@ -120,7 +120,7 @@ public class GunSystem : MonoBehaviour
         else
         {
             PlayerMovement = Object.FindFirstObjectByType<PlayerMovement>();
-            
+
             // Try to find PlayerLook if we found a PlayerMovement
             if (PlayerMovement != null)
                 playerLook = PlayerMovement.GetComponent<PlayerLook>();
@@ -153,7 +153,7 @@ public class GunSystem : MonoBehaviour
                 // Stop any currently playing sound
                 audioSource.Stop();
                 isShootSoundPlaying = false;
-                
+
                 // Play reload sound
                 audioSource.clip = reloadSound;
                 audioSource.volume = reloadSoundVolume;
@@ -161,7 +161,7 @@ public class GunSystem : MonoBehaviour
             }
         }
 
-        
+
         if (readyToShoot && shooting && !reloading && bulletsLeft > 0) // full auto 
             Shoot();
     }
@@ -178,14 +178,14 @@ public class GunSystem : MonoBehaviour
             {
                 audioSource.Stop();
             }
-            
+
             // Play the new shoot sound
             audioSource.clip = shootSound;
             audioSource.volume = shootSoundVolume;
             audioSource.Play();
             isShootSoundPlaying = true;
             lastShootSoundTime = Time.time;
-            
+
             // Set a timer to reset the playing flag when the sound finishes
             Invoke("ResetShootSoundFlag", shootSound.length);
         }
@@ -204,13 +204,13 @@ public class GunSystem : MonoBehaviour
         if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out rayHit, range, whatIsEnemy))
         {
             Debug.Log(rayHit.collider.name);
-            
+
             if (rayHit.collider.CompareTag("Enemy"))
             {
                 HealthLogic healthLogic = rayHit.collider.GetComponent<HealthLogic>();
                 if (healthLogic != null)
                 {
-                    healthLogic.takeDamage(damage);
+                    healthLogic.TakeDamage(damage);
                 }
                 else // Null check
                 {
@@ -244,7 +244,7 @@ public class GunSystem : MonoBehaviour
         // Add recoil up per shot
         targetCameraRecoil += new Vector3(-recoilUpAmount, 0, 0);
     }
-    
+
     // Method to reset camera recoil (useful for reload or after time)
     public void ResetCameraRecoil()
     {
@@ -258,26 +258,26 @@ public class GunSystem : MonoBehaviour
     }
 
     private void HandleCameraRecoil()
-{
-    if (playerLook == null) return;
-
-    Vector3 currentRecoilOffset = playerLook.GetRecoilOffset();
-    
-    if (wasShooting && !shooting)
     {
-        // Add upward recoil when shot ends
-        targetCameraRecoil += new Vector3(2.3f, 0, 0);
+        if (playerLook == null) return;
+
+        Vector3 currentRecoilOffset = playerLook.GetRecoilOffset();
+
+        if (wasShooting && !shooting)
+        {
+            // Add upward recoil when shot ends
+            targetCameraRecoil += new Vector3(2.3f, 0, 0);
+        }
+
+        // Remove the recovery code - let it stay at the recoiled position
+        // No lerping back to zero or drifting down
+
+        wasShooting = shooting;
+
+        Vector3 newRecoilOffset = Vector3.SmoothDamp(currentRecoilOffset, targetCameraRecoil, ref recoilVelocity, 0.1f);
+
+        playerLook.SetRecoilOffset(newRecoilOffset);
     }
-    
-    // Remove the recovery code - let it stay at the recoiled position
-    // No lerping back to zero or drifting down
-    
-    wasShooting = shooting;
-    
-    Vector3 newRecoilOffset = Vector3.SmoothDamp(currentRecoilOffset, targetCameraRecoil, ref recoilVelocity, 0.1f);
-    
-    playerLook.SetRecoilOffset(newRecoilOffset);
-}
 
     private void ShowMuzzleFlash()
     {
@@ -286,7 +286,7 @@ public class GunSystem : MonoBehaviour
         // Remove any existing muzzle flash
         if (currentMuzzleFlash != null)
             Destroy(currentMuzzleFlash);
-        
+
 
         Vector3 cameraPosition = fpsCam.transform.position;
         Vector3 forwardDirection = fpsCam.transform.forward;
@@ -439,7 +439,7 @@ public class GunSystem : MonoBehaviour
 
         forceFinishReload = true;
     }
-    
+
     // Method to reset the shoot sound playing flag
     private void ResetShootSoundFlag()
     {
