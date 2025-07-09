@@ -12,6 +12,6 @@ public class CubeInteractable : Interactable
 
     protected override void Interact()
     {
-        lpHealthLogic.takeDamage(10);
+        lpHealthLogic.TakeDamage(10);
     }
 }
