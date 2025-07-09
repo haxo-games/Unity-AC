@@ -6,4 +6,4 @@ No this isn't a Unity Anti Cheat, instead it is a work in progress Unity reimple
 
 ## A word on licensing
 
-We did our best to credit all of the original authors of any assets used although the crediting and licensing work on Assault Cube was very poorly done. In many cases such as for audios a lot of the assets used by the game are uncredited and sometimes unmodified samples from free sources. With this in mind you can find more details inside of the `LICENSE.md` file.
+We did/do our best to credit all of the original authors of any assets used although the crediting and licensing work on Assault Cube was very poorly done. In many cases such as for audios a lot of the assets used by the game are uncredited and sometimes unmodified samples from free sources. With this in mind you can find more details inside of the `LICENSE.md` file.
