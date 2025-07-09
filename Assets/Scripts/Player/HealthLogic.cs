@@ -24,7 +24,7 @@ public class HealthLogic : MonoBehaviour
         int piercing = 0; // Later change this based on weapon that inflicted damage
         int activeDamage = damage;
 
-        if (armor == 0)
+        if (armor <= 25)
             activeDamage = (int)(16.0f / 25.0f * armor);
         else if (armor > 25)
             activeDamage = (int)(17.0f / 25.0f * armor) - 1;
@@ -68,7 +68,7 @@ public class HealthLogic : MonoBehaviour
         }
 
         OnDeath?.Invoke();
-        DisableEntityComponents(); // when dead disable comps
+        DisableEntityComponents();
 
         if (useDeathDelay)
             Destroy(gameObject, deathDelay);
