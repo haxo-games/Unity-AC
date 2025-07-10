@@ -7,7 +7,7 @@ public class GunSystem : MonoBehaviour
     public float fireRate, spread, range, reloadTime, timeBetweenShots;
     public int magazingSize, bulletperTap;
     public bool allowButtonHold;
-    int bulletsLeft, bulletsShot;
+    public int bulletsLeft, bulletsShot;
 
     // Recoil Settings
     [Header("Recoil Settings")]
@@ -71,6 +71,9 @@ public class GunSystem : MonoBehaviour
     private PlayerMovement PlayerMovement;
     private PlayerLook playerLook;
 
+    // UI Reference
+    private FPSUIManager uiManager;
+
     // Audio
     private AudioSource audioSource;
     public AudioClip shootSound;
@@ -107,6 +110,7 @@ public class GunSystem : MonoBehaviour
         muzzleFlashTimer = 0f;
 
         FindPlayerReferences();
+        FindUIManager(); 
     }
 
     private void FindPlayerReferences()
@@ -121,14 +125,24 @@ public class GunSystem : MonoBehaviour
         {
             PlayerMovement = Object.FindFirstObjectByType<PlayerMovement>();
 
-            // Try to find PlayerLook if we found a PlayerMovement
+            
             if (PlayerMovement != null)
                 playerLook = PlayerMovement.GetComponent<PlayerLook>();
         }
 
-        // If we still don't have PlayerLook, try to find it anywhere
+        
         if (playerLook == null)
             playerLook = Object.FindFirstObjectByType<PlayerLook>();
+    }
+
+    
+    private void FindUIManager()
+    {
+        uiManager = Object.FindFirstObjectByType<FPSUIManager>();
+        if (uiManager == null)
+        {
+            Debug.LogWarning("FPSUIManager not found! Ammo UI won't update.");
+        }
     }
 
     private void Update()
@@ -150,7 +164,7 @@ public class GunSystem : MonoBehaviour
             Reload();
             if (audioSource != null && reloadSound != null)
             {
-                // Stop any currently playing sound
+                
                 audioSource.Stop();
                 isShootSoundPlaying = false;
 
@@ -170,10 +184,10 @@ public class GunSystem : MonoBehaviour
     {
         readyToShoot = false;
 
-        // Stop any currently playing shoot sound and play the new one
+        
         if (audioSource != null && shootSound != null)
         {
-            // Stop the current sound if it's playing
+            
             if (isShootSoundPlaying)
             {
                 audioSource.Stop();
@@ -186,7 +200,7 @@ public class GunSystem : MonoBehaviour
             isShootSoundPlaying = true;
             lastShootSoundTime = Time.time;
 
-            // Set a timer to reset the playing flag when the sound finishes
+            
             Invoke("ResetShootSoundFlag", shootSound.length);
         }
 
@@ -195,7 +209,7 @@ public class GunSystem : MonoBehaviour
         ApplyCameraRecoil();
         ShowMuzzleFlash();
 
-        if (fpsCam == null) // Error check while changing scenes can be deleted later
+        if (fpsCam == null) // Error check while changing scenes can be deleted later nts
         {
             Debug.LogError("FPS Camera is not assigned!");
             return;
@@ -212,7 +226,7 @@ public class GunSystem : MonoBehaviour
                 {
                     healthLogic.TakeDamage(damage);
                 }
-                else // Null check
+                else 
                 {
                     Debug.LogWarning($"Enemy {rayHit.collider.name} doesn't have a HealthLogic component!");
                 }
@@ -220,6 +234,11 @@ public class GunSystem : MonoBehaviour
         }
 
         bulletsLeft--;
+        
+        if (uiManager != null)
+        {
+            FPSUIManager.UpdateAmmo(bulletsLeft, magazingSize);
+        }
         bulletsShot++;
 
         Invoke("ResetShots", timeBetweenShots);
@@ -245,7 +264,7 @@ public class GunSystem : MonoBehaviour
         targetCameraRecoil += new Vector3(-recoilUpAmount, 0, 0);
     }
 
-    // Method to reset camera recoil (useful for reload or after time)
+    
     public void ResetCameraRecoil()
     {
         if (playerLook != null)
@@ -269,8 +288,7 @@ public class GunSystem : MonoBehaviour
             targetCameraRecoil += new Vector3(2.3f, 0, 0);
         }
 
-        // Remove the recovery code - let it stay at the recoiled position
-        // No lerping back to zero or drifting down
+        
 
         wasShooting = shooting;
 
@@ -432,15 +450,17 @@ public class GunSystem : MonoBehaviour
         reloadTargetOffset = Vector3.zero;
     }
 
-    private void ReloadFinished()
-    {
-        bulletsLeft = magazingSize;
-        reloading = false;
+    
+private void ReloadFinished()
+{
+    bulletsLeft = magazingSize;
+    
+    FPSUIManager.UpdateAmmo(bulletsLeft, magazingSize);
+    reloading = false;
 
-        forceFinishReload = true;
-    }
+    forceFinishReload = true;
+}
 
-    // Method to reset the shoot sound playing flag
     private void ResetShootSoundFlag()
     {
         isShootSoundPlaying = false;

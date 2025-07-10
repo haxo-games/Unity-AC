@@ -21,7 +21,7 @@ public class HealthLogic : MonoBehaviour
     {
         if (isDead) return health;
 
-        int piercing = 0; // Later change this based on weapon that inflicted damage
+        int piercing = 0; // Later change this based on weapon that inflicted damage through people yk what piercing is
         int activeDamage = damage;
 
         if (armor <= 25)
@@ -40,6 +40,13 @@ public class HealthLogic : MonoBehaviour
         damage -= reducedDamage;
 
         health -= damage;
+
+        
+        if (gameObject.CompareTag("Player"))
+        {
+            FPSUIManager.UpdateHealth(health);
+            FPSUIManager.UpdateShield(armor);
+        }
 
         OnDamage?.Invoke(health, armor);
 
