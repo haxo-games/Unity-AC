@@ -555,7 +555,7 @@ MonoBehaviour:
   deathDelay: 2
   useDeathDelay: 1
   health: 100
-  armor: 0
+  armor: 50
 --- !u!114 &210786497
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -742,7 +742,7 @@ GameObject:
   - component: {fileID: 234794254}
   - component: {fileID: 234794253}
   m_Layer: 5
-  m_Name: Health Text (TMP)
+  m_Name: HealthText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -787,7 +787,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 100
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1243,8 +1243,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47f410b2ae5e0a347baf1df76cd1eeb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  basePosition: {x: 0, y: 0, z: 0}
-  isShaking: 0
 --- !u!4 &329151114 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5197596087631398279, guid: 942f32093ec69e64cbbfac4b9447c555, type: 3}
@@ -1729,7 +1727,7 @@ GameObject:
   - component: {fileID: 439240173}
   - component: {fileID: 439240172}
   m_Layer: 5
-  m_Name: Health Icon
+  m_Name: Gun Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1774,7 +1772,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 1e2a713edbd080440a037891a167e4ce, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9972c229f886b784d9ace14e72c5cf87, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1936,7 +1934,7 @@ GameObject:
   - component: {fileID: 468085253}
   - component: {fileID: 468085254}
   m_Layer: 5
-  m_Name: mag ammo
+  m_Name: AmmoText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1989,7 +1987,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 100
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3375,8 +3373,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 03b2ce4880fbac741a0f020c9fca9a78, type: 2}
+  m_sharedMaterial: {fileID: 3265332089241818425, guid: 03b2ce4880fbac741a0f020c9fca9a78, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3689,7 +3687,7 @@ GameObject:
   - component: {fileID: 740957845}
   - component: {fileID: 740957844}
   m_Layer: 5
-  m_Name: Armor Text (TMP)
+  m_Name: ShieldText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3734,7 +3732,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 0
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5583,7 +5581,7 @@ GameObject:
   - component: {fileID: 1230122436}
   - component: {fileID: 1230122435}
   m_Layer: 5
-  m_Name: Reserve mag ammo
+  m_Name: ReserveAmmoText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5609,7 +5607,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 0
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -7502,7 +7500,8 @@ MonoBehaviour:
   range: 100
   reloadTime: 1.8
   timeBetweenShots: 0.15
-  magazingSize: 30
+  magazingSize: 20
+  reserveSize: 40
   bulletperTap: 1
   allowButtonHold: 1
   bulletsLeft: 0

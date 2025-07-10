@@ -55,9 +55,6 @@ public class FPSUIManager : MonoBehaviour
         
         if (reserveAmmoText == null)
             reserveAmmoText = GameObject.Find("ReserveAmmoText")?.GetComponent<TextMeshProUGUI>();
-        
-        
-        Debug.Log($"UI Elements Found - Health: {healthText != null}, Shield: {shieldText != null}, Ammo: {ammoText != null}, Reserve: {reserveAmmoText != null}");
     }
     
     void SetRealValues()
@@ -89,7 +86,7 @@ public class FPSUIManager : MonoBehaviour
         if (gunSystemScript != null)
         {
             Debug.Log("Gun script found! Ammo: " + gunSystemScript.bulletsLeft + " Magazine: " + gunSystemScript.magazingSize);
-            UpdateAmmo(gunSystemScript.bulletsLeft, gunSystemScript.magazingSize);
+            UpdateAmmo(gunSystemScript.bulletsLeft, gunSystemScript.reserveSize);
         }
         else
         {

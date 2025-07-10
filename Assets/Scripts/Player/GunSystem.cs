@@ -5,7 +5,7 @@ public class GunSystem : MonoBehaviour
     // Gun Stats
     public int damage;
     public float fireRate, spread, range, reloadTime, timeBetweenShots;
-    public int magazingSize, bulletperTap;
+    public int magazingSize, reserveSize, bulletperTap;
     public bool allowButtonHold;
     public int bulletsLeft, bulletsShot;
 
@@ -85,7 +85,6 @@ public class GunSystem : MonoBehaviour
     private float lastShootSoundTime = 0f;
     private bool isShootSoundPlaying = false;
 
-
     private void Awake()
     {
         bulletsLeft = magazingSize;
@@ -110,7 +109,7 @@ public class GunSystem : MonoBehaviour
         muzzleFlashTimer = 0f;
 
         FindPlayerReferences();
-        FindUIManager(); 
+        FindUIManager();
     }
 
     private void FindPlayerReferences()
@@ -125,17 +124,14 @@ public class GunSystem : MonoBehaviour
         {
             PlayerMovement = Object.FindFirstObjectByType<PlayerMovement>();
 
-            
             if (PlayerMovement != null)
                 playerLook = PlayerMovement.GetComponent<PlayerLook>();
         }
 
-        
         if (playerLook == null)
             playerLook = Object.FindFirstObjectByType<PlayerLook>();
     }
 
-    
     private void FindUIManager()
     {
         uiManager = Object.FindFirstObjectByType<FPSUIManager>();
@@ -159,12 +155,12 @@ public class GunSystem : MonoBehaviour
         if (allowButtonHold) shooting = Input.GetKey(KeyCode.Mouse0);
         else shooting = Input.GetKeyDown(KeyCode.Mouse0);
 
-        if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazingSize && !reloading)
+        // Only allow reload if we have bullets in magazine that need reloading AND we have reserve ammo
+        if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazingSize && !reloading && reserveSize > 0)
         {
             Reload();
             if (audioSource != null && reloadSound != null)
             {
-                
                 audioSource.Stop();
                 isShootSoundPlaying = false;
 
@@ -175,7 +171,6 @@ public class GunSystem : MonoBehaviour
             }
         }
 
-
         if (readyToShoot && shooting && !reloading && bulletsLeft > 0) // full auto 
             Shoot();
     }
@@ -184,10 +179,8 @@ public class GunSystem : MonoBehaviour
     {
         readyToShoot = false;
 
-        
         if (audioSource != null && shootSound != null)
         {
-            
             if (isShootSoundPlaying)
             {
                 audioSource.Stop();
@@ -200,7 +193,6 @@ public class GunSystem : MonoBehaviour
             isShootSoundPlaying = true;
             lastShootSoundTime = Time.time;
 
-            
             Invoke("ResetShootSoundFlag", shootSound.length);
         }
 
@@ -226,7 +218,7 @@ public class GunSystem : MonoBehaviour
                 {
                     healthLogic.TakeDamage(damage);
                 }
-                else 
+                else
                 {
                     Debug.LogWarning($"Enemy {rayHit.collider.name} doesn't have a HealthLogic component!");
                 }
@@ -234,10 +226,10 @@ public class GunSystem : MonoBehaviour
         }
 
         bulletsLeft--;
-        
+
         if (uiManager != null)
         {
-            FPSUIManager.UpdateAmmo(bulletsLeft, magazingSize);
+            FPSUIManager.UpdateAmmo(bulletsLeft, reserveSize);
         }
         bulletsShot++;
 
@@ -264,7 +256,6 @@ public class GunSystem : MonoBehaviour
         targetCameraRecoil += new Vector3(-recoilUpAmount, 0, 0);
     }
 
-    
     public void ResetCameraRecoil()
     {
         if (playerLook != null)
@@ -288,8 +279,6 @@ public class GunSystem : MonoBehaviour
             targetCameraRecoil += new Vector3(2.3f, 0, 0);
         }
 
-        
-
         wasShooting = shooting;
 
         Vector3 newRecoilOffset = Vector3.SmoothDamp(currentRecoilOffset, targetCameraRecoil, ref recoilVelocity, 0.1f);
@@ -304,7 +293,6 @@ public class GunSystem : MonoBehaviour
         // Remove any existing muzzle flash
         if (currentMuzzleFlash != null)
             Destroy(currentMuzzleFlash);
-
 
         Vector3 cameraPosition = fpsCam.transform.position;
         Vector3 forwardDirection = fpsCam.transform.forward;
@@ -450,19 +438,43 @@ public class GunSystem : MonoBehaviour
         reloadTargetOffset = Vector3.zero;
     }
 
-    
-private void ReloadFinished()
-{
-    bulletsLeft = magazingSize;
-    
-    FPSUIManager.UpdateAmmo(bulletsLeft, magazingSize);
-    reloading = false;
+    private void ReloadFinished()
+    {
 
-    forceFinishReload = true;
-}
+        int bulletsNeeded = magazingSize - bulletsLeft;
+        
+        int bulletsToReload = Mathf.Min(bulletsNeeded, reserveSize);
+          
+        bulletsLeft += bulletsToReload;
+        reserveSize -= bulletsToReload;
+        
+    
+        if (uiManager != null)
+        {
+            FPSUIManager.UpdateAmmo(bulletsLeft, reserveSize);
+        }
+        
+        reloading = false;
+        forceFinishReload = true;
+    }
 
     private void ResetShootSoundFlag()
     {
         isShootSoundPlaying = false;
+    }
+
+    // For when we add pickUp able ammo like the AC counterpart
+    public void AddReserveAmmo(int amount)
+    {
+        reserveSize += amount;
+        if (uiManager != null)
+        {
+            FPSUIManager.UpdateAmmo(bulletsLeft, reserveSize);
+        }
+    }
+
+    public int GetReserveAmmo()
+    {
+        return reserveSize;
     }
 }
