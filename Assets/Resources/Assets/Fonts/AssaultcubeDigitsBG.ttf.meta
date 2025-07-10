@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a963b9202582e34468e5f292bf55146b
+guid: 9362d424f73ef484781f7882823d9e49
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Ac Numbers
+  - AssaultcubeDigitsBG
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

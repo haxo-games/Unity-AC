@@ -7,10 +7,14 @@ public class FPSUIManager : MonoBehaviour
     
     [Header("UI Elements")]
     public TextMeshProUGUI healthText;
+    public TextMeshProUGUI healthTextBG;
     public TextMeshProUGUI shieldText;
+    public TextMeshProUGUI shieldTextBG;
     public TextMeshProUGUI ammoText;
+    public TextMeshProUGUI ammoTextBG;
     public TextMeshProUGUI reserveAmmoText;
-    
+    public TextMeshProUGUI reserveAmmoTextBG;
+
     [Header("Script References - Auto Found")]
     private HealthLogic playerHealthScript;
     private GunSystem gunSystemScript;
@@ -46,15 +50,27 @@ public class FPSUIManager : MonoBehaviour
         
         if (healthText == null)
             healthText = GameObject.Find("HealthText")?.GetComponent<TextMeshProUGUI>();
-        
+
+        if (healthTextBG == null)
+            healthTextBG = GameObject.Find("HealthText-BG")?.GetComponent<TextMeshProUGUI>();
+
         if (shieldText == null)
             shieldText = GameObject.Find("ShieldText")?.GetComponent<TextMeshProUGUI>();
-        
+
+        if (shieldTextBG == null)
+            shieldTextBG = GameObject.Find("ShieldText-BG")?.GetComponent<TextMeshProUGUI>();
+
         if (ammoText == null)
             ammoText = GameObject.Find("AmmoText")?.GetComponent<TextMeshProUGUI>();
-        
+
+        if (ammoTextBG == null)
+            ammoTextBG = GameObject.Find("AmmoText-BG")?.GetComponent<TextMeshProUGUI>();
+
         if (reserveAmmoText == null)
             reserveAmmoText = GameObject.Find("ReserveAmmoText")?.GetComponent<TextMeshProUGUI>();
+
+        if (reserveAmmoTextBG == null)
+            reserveAmmoTextBG = GameObject.Find("ReserveAmmoText-BG")?.GetComponent<TextMeshProUGUI>();
     }
     
     void SetRealValues()
@@ -130,6 +146,7 @@ public class FPSUIManager : MonoBehaviour
         if (Instance != null && Instance.healthText != null)
         {
             Instance.healthText.text = health.ToString();
+            Instance.healthTextBG.text = health.ToString();
             Debug.Log("UI Health updated to: " + health);
         }
         else if (Instance != null && Instance.healthText == null)
@@ -143,6 +160,7 @@ public class FPSUIManager : MonoBehaviour
         if (Instance != null && Instance.shieldText != null)
         {
             Instance.shieldText.text = shield.ToString();
+            Instance.shieldTextBG.text = shield.ToString();
             Debug.Log("UI Shield updated to: " + shield);
         }
         else if (Instance != null && Instance.shieldText == null)
@@ -159,6 +177,7 @@ public class FPSUIManager : MonoBehaviour
             if (Instance.ammoText != null)
             {
                 Instance.ammoText.text = current.ToString();
+                Instance.ammoTextBG.text = current.ToString();
                 Debug.Log("Set ammoText to: " + current);
             }
             else
@@ -169,6 +188,7 @@ public class FPSUIManager : MonoBehaviour
             if (Instance.reserveAmmoText != null)
             {
                 Instance.reserveAmmoText.text = reserve.ToString();
+                Instance.reserveAmmoTextBG.text = reserve.ToString();
                 Debug.Log("Set reserveAmmoText to: " + reserve);
             }
             else
