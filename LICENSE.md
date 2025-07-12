@@ -2,12 +2,12 @@
 
 ## Project License
 
-This AssaultCube Unity reimplementation is released under the **MIT License**.
+This AssaultCube Unity reimplementation is released under the **MIT License with Exclusions**.
 
 ```
-MIT License
+MIT License with Exclusions
 
-Copyright (c) 2025 [Your Name/Organization]
+Copyright (c) 2025 haxo.games
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,17 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
+
+**EXCLUDED ENTITIES**: This license specifically excludes and does not grant any
+rights to the following entities and their affiliates:
+- Guided Hacking LLC (https://guidedhacking.com/) and its affiliates
+- Offensive Security Services, LLC (https://www.offsec.com/) and its affiliates
+- Hack The Box Ltd (https://www.hackthebox.com/) and its affiliates
+- TryHackMe Ltd (https://www.tryhackme.com/) and its affiliates
+
+These excluded entities and their affiliates are prohibited from using, copying,
+modifying, merging, publishing, distributing, sublicensing, and/or selling
+copies of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
