@@ -85,6 +85,9 @@ public class GunSystem : MonoBehaviour
     private float lastShootSoundTime = 0f;
     private bool isShootSoundPlaying = false;
 
+    private bool justActivated = false;
+    private float activationTime = 0f;
+
     private void Awake()
     {
         bulletsLeft = magazingSize;
@@ -150,13 +153,52 @@ public class GunSystem : MonoBehaviour
         HandleMuzzleFlash();
     }
 
+    private void OnDisable() => reloading = false;
+
+    private void OnEnable()
+    {
+        justActivated = true;
+        
+        currentRecoilOffset = Vector3.zero;
+        recoilTimer = 0f;
+        transform.localPosition = originalPosition;
+        
+        ResetCameraRecoil();
+        
+        isReloadAnimating = false;
+        isSlideUp = false;
+        reloadTargetOffset = Vector3.zero;
+        forceFinishReload = false;
+        
+        if (uiManager != null)
+        {
+            FPSUIManager.UpdateAmmo(bulletsLeft, reserveSize);
+        }
+        else
+        {
+            FindUIManager();
+            if (uiManager != null)
+            {
+                FPSUIManager.UpdateAmmo(bulletsLeft, reserveSize);
+            }
+        }
+    }
+    
     private void MyInput()
     {
-        if (allowButtonHold) shooting = Input.GetKey(KeyCode.Mouse0);
-        else shooting = Input.GetKeyDown(KeyCode.Mouse0);
+        if (justActivated && Time.time - activationTime < 0.1f)
+        {
+            shooting = false;
+        }
+        else
+        {
+            if (allowButtonHold) shooting = Input.GetKey(KeyCode.Mouse0);
+            else shooting = Input.GetKeyDown(KeyCode.Mouse0);
 
-        // Only allow reload if we have bullets in magazine that need reloading AND we have reserve ammo
-        if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazingSize && !reloading && reserveSize > 0)
+            if (Time.time - activationTime >= 0.1f)
+                justActivated = false;
+        }
+        if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazingSize && !reloading && reserveSize > 0 && gameObject.activeSelf)
         {
             Reload();
             if (audioSource != null && reloadSound != null)
@@ -164,13 +206,12 @@ public class GunSystem : MonoBehaviour
                 audioSource.Stop();
                 isShootSoundPlaying = false;
 
-                // Play reload sound
+
                 audioSource.clip = reloadSound;
                 audioSource.volume = reloadSoundVolume;
                 audioSource.Play();
             }
         }
-
         if (readyToShoot && shooting && !reloading && bulletsLeft > 0) // full auto 
             Shoot();
     }

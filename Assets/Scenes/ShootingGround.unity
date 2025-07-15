@@ -5798,9 +5798,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2333cc4ff67ca884c902fa158945ef2b, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1659874792}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2333cc4ff67ca884c902fa158945ef2b, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1659874791}
   m_SourcePrefab: {fileID: 100100000, guid: 2333cc4ff67ca884c902fa158945ef2b, type: 3}
 --- !u!1001 &1160446662
@@ -7882,58 +7879,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.13953134, y: 0.6284377, z: 0.12687515}
   m_Center: {x: -0.019769453, y: 0.33812416, z: -0.09859383}
---- !u!114 &1659874792
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1659874789}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 875b9b89cf6b99045a020dad9eb66d43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 17
-  fireRate: 0.05
-  spread: 0
-  range: 100
-  reloadTime: 1.8
-  timeBetweenShots: 0.15
-  magazingSize: 20
-  reserveSize: 40
-  bulletperTap: 1
-  allowButtonHold: 1
-  bulletsLeft: 0
-  bulletsShot: 0
-  recoilForce: 0
-  recoilDuration: 0.1
-  recoilRecoverySpeed: 25
-  recoilUpAmount: 2.5
-  recoilSettleAmount: 0.2
-  recoilSettleSpeed: 3
-  recoilBuildupSpeed: 8
-  reloadSlideDistance: 1
-  reloadMotionSpeed: 8
-  slideDownTime: 1.5
-  muzzleFlashPrefab: {fileID: 3440652160077263145, guid: dc2322e8388fb0b41859c412dd3f81f8, type: 3}
-  muzzleFlashDuration: 0.05
-  muzzleFlashDistance: 2
-  muzzleFlashOffset: {x: 0.25, y: -0.3, z: 0}
-  muzzleFlashScale: 0.3
-  wallLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  minFlashDistance: 0.3
-  fpsCam: {fileID: 329151110}
-  attackPoint: {fileID: 0}
-  whatIsEnemy:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  shootSound: {fileID: 8300000, guid: 48bfec30d934abc4c86869fd7f544e55, type: 3}
-  reloadSound: {fileID: 8300000, guid: f4297ca2e17694c4b92e3498377de385, type: 3}
-  shootSoundVolume: 0.1
-  reloadSoundVolume: 0.1
 --- !u!1001 &1661068403
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10209,6 +10154,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2015835959}
+  - component: {fileID: 2015835960}
   m_Layer: 0
   m_Name: AR
   m_TagString: Untagged
@@ -10232,6 +10178,58 @@ Transform:
   - {fileID: 1659874790}
   m_Father: {fileID: 1368311850}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2015835960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2015835958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 875b9b89cf6b99045a020dad9eb66d43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 17
+  fireRate: 0.05
+  spread: 0
+  range: 100
+  reloadTime: 1.8
+  timeBetweenShots: 0.15
+  magazingSize: 20
+  reserveSize: 40
+  bulletperTap: 1
+  allowButtonHold: 1
+  bulletsLeft: 0
+  bulletsShot: 0
+  recoilForce: 0
+  recoilDuration: 0.1
+  recoilRecoverySpeed: 25
+  recoilUpAmount: 2.5
+  recoilSettleAmount: 0.2
+  recoilSettleSpeed: 3
+  recoilBuildupSpeed: 8
+  reloadSlideDistance: 1
+  reloadMotionSpeed: 8
+  slideDownTime: 1.5
+  muzzleFlashPrefab: {fileID: 3440652160077263145, guid: dc2322e8388fb0b41859c412dd3f81f8, type: 3}
+  muzzleFlashDuration: 0.05
+  muzzleFlashDistance: 2
+  muzzleFlashOffset: {x: 0.25, y: -0.3, z: 0}
+  muzzleFlashScale: 0.3
+  wallLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  minFlashDistance: 0.3
+  fpsCam: {fileID: 329151110}
+  attackPoint: {fileID: 0}
+  whatIsEnemy:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  shootSound: {fileID: 8300000, guid: 48bfec30d934abc4c86869fd7f544e55, type: 3}
+  reloadSound: {fileID: 8300000, guid: f4297ca2e17694c4b92e3498377de385, type: 3}
+  shootSoundVolume: 0.1
+  reloadSoundVolume: 0.1
 --- !u!1 &2024137373
 GameObject:
   m_ObjectHideFlags: 0
