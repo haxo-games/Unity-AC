@@ -4024,7 +4024,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &760735723
 Transform:
   m_ObjectHideFlags: 0
@@ -4084,11 +4084,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   minFlashDistance: 0.3
-  fpsCam: {fileID: 0}
+  fpsCam: {fileID: 329151110}
   attackPoint: {fileID: 0}
   whatIsEnemy:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   shootSound: {fileID: 0}
   reloadSound: {fileID: 0}
   shootSoundVolume: 0.1
@@ -10161,7 +10161,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2015835959
 Transform:
   m_ObjectHideFlags: 0
