@@ -4017,6 +4017,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 760735723}
+  - component: {fileID: 760735724}
   m_Layer: 0
   m_Name: Pistol
   m_TagString: Untagged
@@ -4040,6 +4041,58 @@ Transform:
   - {fileID: 630869212}
   m_Father: {fileID: 1368311850}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &760735724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 760735722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 875b9b89cf6b99045a020dad9eb66d43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 5
+  fireRate: 0.05
+  spread: 0
+  range: 100
+  reloadTime: 0
+  timeBetweenShots: 0.15
+  magazingSize: 10
+  reserveSize: 50
+  bulletperTap: 0
+  allowButtonHold: 0
+  bulletsLeft: 0
+  bulletsShot: 0
+  recoilForce: 0
+  recoilDuration: 0.1
+  recoilRecoverySpeed: 25
+  recoilUpAmount: 2.5
+  recoilSettleAmount: 0.2
+  recoilSettleSpeed: 3
+  recoilBuildupSpeed: 8
+  reloadSlideDistance: 1
+  reloadMotionSpeed: 8
+  slideDownTime: 1.5
+  muzzleFlashPrefab: {fileID: 0}
+  muzzleFlashDuration: 0.05
+  muzzleFlashDistance: 2
+  muzzleFlashOffset: {x: 0, y: 0, z: 0}
+  muzzleFlashScale: 1
+  wallLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  minFlashDistance: 0.3
+  fpsCam: {fileID: 0}
+  attackPoint: {fileID: 0}
+  whatIsEnemy:
+    serializedVersion: 2
+    m_Bits: 0
+  shootSound: {fileID: 0}
+  reloadSound: {fileID: 0}
+  shootSoundVolume: 0.1
+  reloadSoundVolume: 0.1
 --- !u!1001 &760951101
 PrefabInstance:
   m_ObjectHideFlags: 0
