@@ -13,26 +13,28 @@ public class PlayerLook : MonoBehaviour
 
     public void ProcessLook(Vector2 input)
     {
+        // Don't process look input when window doesn't have focus
+        if (!Application.isFocused)
+            return;
+
         xRotation -= input.y * Time.deltaTime * ySensitivity;
-        
+
         // Apply base rotation + recoil offset
         Vector3 finalRotation = new Vector3(xRotation, 0, 0) + recoilOffset;
-        
+
         // Clamp the final rotation to the viewing limits
         finalRotation.x = Math.Clamp(finalRotation.x, -90, 90);
-        
+
         // Adjust base rotation to compensate for recoil
-        // If we have positive recoil, we need to allow base rotation to go lower to look down
-        // AND higher to look up past the recoil
-        float minBaseRotation = -90 - recoilOffset.x; // Can go lower to compensate for positive recoil
-        float maxBaseRotation = 90 - recoilOffset.x;  // Can go higher to compensate for positive recoil
-        
+        float minBaseRotation = -90 - recoilOffset.x;
+        float maxBaseRotation = 90 - recoilOffset.x;
+
         xRotation = Math.Clamp(xRotation, minBaseRotation, maxBaseRotation);
-        
+
         cam.transform.localRotation = Quaternion.Euler(finalRotation);
         transform.Rotate(Vector3.up * input.x * Time.deltaTime * xSensitivity);
     }
-    
+
     // Method for GunSystem to add recoil
     public void AddRecoilOffset(Vector3 offset)
     {

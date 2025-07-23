@@ -42,7 +42,17 @@ public class InputManager : MonoBehaviour
 
     void LateUpdate()
     {
+        if (!Application.isFocused || !IsMouseInGameArea())
+            return;
+
         playerLook.ProcessLook(playerInput.OnFoot.Look.ReadValue<Vector2>());
+    }
+
+    private bool IsMouseInGameArea()
+    {
+        Vector3 mousePos = Input.mousePosition;
+        return mousePos.x >= 0 && mousePos.x <= Screen.width &&
+               mousePos.y >= 0 && mousePos.y <= Screen.height - 30;
     }
 
     void OnEnable()

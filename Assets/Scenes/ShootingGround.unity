@@ -1699,16 +1699,14 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1856980026}
   - {fileID: 1748899921}
   - {fileID: 849778233}
   - {fileID: 876553352}
-  - {fileID: 720544430}
   m_Father: {fileID: 879122186}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 400, y: 225}
   m_SizeDelta: {x: 181, y: 208}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &396244546
@@ -3597,12 +3595,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 720544429}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 381757971}
+  m_Father: {fileID: 879122186}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4084,6 +4082,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   minFlashDistance: 0.3
+  shootAction: {fileID: 0}
+  reloadAction: {fileID: 0}
   fpsCam: {fileID: 329151110}
   attackPoint: {fileID: 0}
   whatIsEnemy:
@@ -4552,6 +4552,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1856980026}
+  - {fileID: 720544430}
   - {fileID: 381757971}
   - {fileID: 1620863366}
   m_Father: {fileID: 0}
@@ -9206,10 +9208,10 @@ RectTransform:
   m_GameObject: {fileID: 1856980025}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.099999994, y: 0.099999994, z: 0.099999994}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 381757971}
+  m_Father: {fileID: 879122186}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -10221,6 +10223,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   minFlashDistance: 0.3
+  shootAction: {fileID: 0}
+  reloadAction: {fileID: 0}
   fpsCam: {fileID: 329151110}
   attackPoint: {fileID: 0}
   whatIsEnemy:
