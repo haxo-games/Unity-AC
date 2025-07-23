@@ -3179,7 +3179,7 @@ MonoBehaviour:
   deathDelay: 2
   useDeathDelay: 0
   health: 100
-  armor: 1
+  armor: 1233
 --- !u!136 &666800170
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -3880,7 +3880,7 @@ MonoBehaviour:
   deathDelay: 2
   useDeathDelay: 0
   health: 100
-  armor: 1
+  armor: 50
 --- !u!136 &731222154
 CapsuleCollider:
   m_ObjectHideFlags: 0

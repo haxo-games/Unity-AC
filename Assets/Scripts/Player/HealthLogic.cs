@@ -26,11 +26,11 @@ public class HealthLogic : MonoBehaviour
 
         if (armor <= 25)
             activeDamage = (int)(16.0f / 25.0f * armor);
-        else if (armor > 25)
+        else if (armor <= 25)
             activeDamage = (int)(17.0f / 25.0f * armor) - 1;
-        else if (armor > 50)
+        else if (armor <= 50)
             activeDamage = (int)(4.0f / 25.0f * armor) + 25;
-        else if (armor > 75)
+        else if (armor <= 75)
             activeDamage = (int)(4.0f / 25.0f * armor) + 25;
 
         int reducedArmor = (int)(activeDamage * damage / 100.0f);
@@ -51,7 +51,7 @@ public class HealthLogic : MonoBehaviour
         OnDamage?.Invoke(health, armor);
 
         /* Handle death or pain sound */
-        if (health == 0 && !isDead)
+        if (health <= 0 && !isDead)
             Die();
         else if (health > 0 && painClipsArray != null && painClipsArray.Length > 0)
         {
