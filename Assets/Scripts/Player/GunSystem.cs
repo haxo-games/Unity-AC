@@ -88,7 +88,6 @@ public class GunSystem : MonoBehaviour
     public float shootSoundVolume = 0.1f;
     [Range(0f, 1f)]
     public float reloadSoundVolume = 0.1f;
-    private float lastShootSoundTime = 0f;
     private bool isShootSoundPlaying = false;
 
     private bool justActivated = false;
@@ -281,7 +280,6 @@ public class GunSystem : MonoBehaviour
             audioSource.volume = shootSoundVolume;
             audioSource.Play();
             isShootSoundPlaying = true;
-            lastShootSoundTime = Time.time;
 
             Invoke("ResetShootSoundFlag", shootSound.length);
         }
