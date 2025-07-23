@@ -5,7 +5,7 @@ using System.Collections;
 public class LoadingDelay : MonoBehaviour
 {
     public float delayTime = 2f;
-    public string gameSceneName = "GameScene";
+    public string gameSceneName = "ShootingGround";
 
     void Start()
     {

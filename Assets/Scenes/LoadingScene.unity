@@ -273,9 +273,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2836a5d98612304993776041281e059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  displayTime: 5
-  fadeOutTime: 0.5
-  gameSceneName: GameScene
+  delayTime: 2
+  gameSceneName: ShootingGround
 --- !u!1 &1343386333
 GameObject:
   m_ObjectHideFlags: 0

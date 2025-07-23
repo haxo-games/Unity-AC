@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
-using UnityEngine.InputSystem.Interactions;
+using UnityEngine.InputSystem;
+
 public class GunSystem : MonoBehaviour
 {
     // Gun Stats
@@ -36,6 +37,11 @@ public class GunSystem : MonoBehaviour
     public float muzzleFlashScale = 1f;
     public LayerMask wallLayers = -1;
     public float minFlashDistance = 0.3f;
+
+    // Input System Variables
+    [Header("Input Settings")]
+    public InputActionReference shootAction;
+    public InputActionReference reloadAction;
 
     // Cases
     bool shooting, readyToShoot, reloading;
@@ -115,6 +121,53 @@ public class GunSystem : MonoBehaviour
         FindUIManager();
     }
 
+    private void OnEnable()
+    {
+        // Enable input actions
+        if (shootAction != null)
+            shootAction.action.Enable();
+        if (reloadAction != null)
+            reloadAction.action.Enable();
+
+        justActivated = true;
+        activationTime = Time.time;
+
+        currentRecoilOffset = Vector3.zero;
+        recoilTimer = 0f;
+        transform.localPosition = originalPosition;
+
+        ResetCameraRecoil();
+
+        isReloadAnimating = false;
+        isSlideUp = false;
+        reloadTargetOffset = Vector3.zero;
+        forceFinishReload = false;
+
+        if (uiManager != null)
+        {
+            FPSUIManager.UpdateAmmo(bulletsLeft, reserveSize);
+        }
+        else
+        {
+            FindUIManager();
+            if (uiManager != null)
+            {
+                FPSUIManager.UpdateAmmo(bulletsLeft, reserveSize);
+            }
+        }
+    }
+
+    private void OnDisable()
+    {
+        reloading = false;
+
+        // Disable input actions
+        if (shootAction != null)
+            shootAction.action.Disable();
+        if (reloadAction != null)
+            reloadAction.action.Disable();
+    }
+
     private void FindPlayerReferences()
     {
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -153,37 +206,6 @@ public class GunSystem : MonoBehaviour
         HandleMuzzleFlash();
     }
 
-    private void OnDisable() => reloading = false;
-
-    private void OnEnable()
-    {
-        justActivated = true;
-        
-        currentRecoilOffset = Vector3.zero;
-        recoilTimer = 0f;
-        transform.localPosition = originalPosition;
-        
-        ResetCameraRecoil();
-        
-        isReloadAnimating = false;
-        isSlideUp = false;
-        reloadTargetOffset = Vector3.zero;
-        forceFinishReload = false;
-        
-        if (uiManager != null)
-        {
-            FPSUIManager.UpdateAmmo(bulletsLeft, reserveSize);
-        }
-        else
-        {
-            FindUIManager();
-            if (uiManager != null)
-            {
-                FPSUIManager.UpdateAmmo(bulletsLeft, reserveSize);
-            }
-        }
-    }
-    
     private void MyInput()
     {
         if (justActivated && Time.time - activationTime < 0.1f)
@@ -192,13 +214,40 @@ public class GunSystem : MonoBehaviour
         }
         else
         {
-            if (allowButtonHold) shooting = Input.GetKey(KeyCode.Mouse0);
-            else shooting = Input.GetKeyDown(KeyCode.Mouse0);
+            // New Input System implementation
+            if (shootAction != null)
+            {
+                if (allowButtonHold)
+                    shooting = shootAction.action.IsPressed();
+                else
+                    shooting = shootAction.action.WasPressedThisFrame();
+            }
+            else
+            {
+                // Fallback to old input system if no InputActionReference is assigned
+                Debug.LogWarning("Shoot action not assigned! Using fallback input.");
+                if (allowButtonHold) shooting = Input.GetKey(KeyCode.Mouse0);
+                else shooting = Input.GetKeyDown(KeyCode.Mouse0);
+            }
 
             if (Time.time - activationTime >= 0.1f)
                 justActivated = false;
         }
-        if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazingSize && !reloading && reserveSize > 0 && gameObject.activeSelf)
+
+        // Handle reload input
+        bool reloadPressed = false;
+        if (reloadAction != null)
+        {
+            reloadPressed = reloadAction.action.WasPressedThisFrame();
+        }
+        else
+        {
+            // Fallback to old input system
+            Debug.LogWarning("Reload action not assigned! Using fallback input.");
+            reloadPressed = Input.GetKeyDown(KeyCode.R);
+        }
+
+        if (reloadPressed && bulletsLeft < magazingSize && !reloading && reserveSize > 0 && gameObject.activeSelf)
         {
             Reload();
             if (audioSource != null && reloadSound != null)
@@ -206,12 +255,12 @@ public class GunSystem : MonoBehaviour
                 audioSource.Stop();
                 isShootSoundPlaying = false;
 
-
                 audioSource.clip = reloadSound;
                 audioSource.volume = reloadSoundVolume;
                 audioSource.Play();
             }
         }
+
         if (readyToShoot && shooting && !reloading && bulletsLeft > 0) // full auto 
             Shoot();
     }
@@ -481,20 +530,18 @@ public class GunSystem : MonoBehaviour
 
     private void ReloadFinished()
     {
-
         int bulletsNeeded = magazingSize - bulletsLeft;
-        
+
         int bulletsToReload = Mathf.Min(bulletsNeeded, reserveSize);
-          
+
         bulletsLeft += bulletsToReload;
         reserveSize -= bulletsToReload;
-        
-    
+
         if (uiManager != null)
         {
             FPSUIManager.UpdateAmmo(bulletsLeft, reserveSize);
         }
-        
+
         reloading = false;
         forceFinishReload = true;
     }
