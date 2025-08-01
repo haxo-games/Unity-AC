@@ -857,10 +857,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da8bb1adfcdd12247a2bbb5ac5f30ebf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distance: 3
-  mask:
+  interactRange: 3
+  interactLayerMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 4294967295
+  enableDebugRay: 0
 --- !u!114 &210786499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1016,7 +1017,7 @@ GameObject:
   - component: {fileID: 219364920}
   - component: {fileID: 219364919}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Damage Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2081,7 +2082,7 @@ GameObject:
   - component: {fileID: 456795098}
   - component: {fileID: 456795097}
   m_Layer: 0
-  m_Name: Terrain
+  m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2286,6 +2287,7 @@ Transform:
   - {fileID: 908465503}
   - {fileID: 1391610318}
   - {fileID: 1824265065}
+  - {fileID: 659920223}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &588575998
@@ -2967,7 +2969,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 554066247}
     m_Modifications:
     - target: {fileID: -8700617353114198275, guid: 8b4dc26efa968ca478548a432b4d460c, type: 3}
       propertyPath: m_Name
@@ -2987,15 +2989,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8b4dc26efa968ca478548a432b4d460c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -106.268
+      value: -10.848
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8b4dc26efa968ca478548a432b4d460c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8b4dc26efa968ca478548a432b4d460c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -23.570002
+      value: -28.260002
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8b4dc26efa968ca478548a432b4d460c, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3003,15 +3005,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8b4dc26efa968ca478548a432b4d460c, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8b4dc26efa968ca478548a432b4d460c, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8b4dc26efa968ca478548a432b4d460c, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8b4dc26efa968ca478548a432b4d460c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -3113,6 +3115,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 772894023}
   m_SourcePrefab: {fileID: 100100000, guid: 8b4dc26efa968ca478548a432b4d460c, type: 3}
+--- !u!4 &659920223 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8b4dc26efa968ca478548a432b4d460c, type: 3}
+  m_PrefabInstance: {fileID: 659920222}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &666800167
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7421,7 +7428,7 @@ GameObject:
   - component: {fileID: 1605567100}
   - component: {fileID: 1605567099}
   m_Layer: 0
-  m_Name: Terrain (1)
+  m_Name: Room_2_Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10600,7 +10607,6 @@ SceneRoots:
   - {fileID: 940768304}
   - {fileID: 499960209}
   - {fileID: 28880338}
-  - {fileID: 659920222}
   - {fileID: 554066247}
   - {fileID: 1491006909}
   - {fileID: 1558625966}
