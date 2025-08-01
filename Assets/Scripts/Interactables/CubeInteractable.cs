@@ -3,7 +3,10 @@ using UnityEngine;
 public class CubeInteractable : Interactable
 {
     [Header("Damage Settings")]
-    [SerializeField] private int damageAmount = 10;
+    [SerializeField] private int minHealthDamage = 5;
+    [SerializeField] private int maxHealthDamage = 20;
+    [SerializeField] private int minArmorDamage = 3;
+    [SerializeField] private int maxArmorDamage = 10;
     [SerializeField] private float interactionCooldown = 1f;
 
     private HealthLogic playerHealthLogic;
@@ -40,13 +43,13 @@ public class CubeInteractable : Interactable
 
         if (playerHealthLogic != null)
         {
-            playerHealthLogic.TakeDamage(damageAmount);
+            // Generate random damage amounts
+            int healthDamage = Random.Range(minHealthDamage, maxHealthDamage + 1);
+            int armorDamage = Random.Range(minArmorDamage, maxArmorDamage + 1);
+            
+            playerHealthLogic.TakeDirectDamage(healthDamage, armorDamage);
             lastInteractionTime = Time.time;
-            Debug.Log($"Cube dealt {damageAmount} damage to player!");
-
-            // Optional: Add visual/audio feedback here
-            // GetComponent<Renderer>().material.color = Color.red;
-            // Invoke("ResetColor", 0.2f);
+            Debug.Log($"Cube dealt {healthDamage} health damage and {armorDamage} armor damage to player!");
         }
         else
         {

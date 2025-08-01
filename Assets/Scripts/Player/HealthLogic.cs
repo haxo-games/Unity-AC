@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class HealthLogic : MonoBehaviour
@@ -10,12 +11,40 @@ public class HealthLogic : MonoBehaviour
     [SerializeField] float deathDelay = 2; // Time for death, like when kill until deletion
     [SerializeField] bool useDeathDelay = true;
 
+    [Header("Player Respawn Settings")]
+    [SerializeField] float respawnDelay = 0f; // Set to 0 for instant respawn
+    [SerializeField] Transform spawnPoint; // Optional custom spawn point
+
     public int health = 100;
     public int armor = 0;
     public event Action<int, int> OnDamage;
     public event Action OnDeath;
+    public event Action OnRespawn;
 
     private bool isDead = false;
+    private int maxHealth;
+    private int maxArmor;
+    private Vector3 initialPosition;
+    private Quaternion initialRotation;
+
+    void Start()
+    {
+        // Store initial values for respawn
+        maxHealth = health;
+        maxArmor = armor;
+        
+        // Store spawn position (use custom spawn point if set, otherwise current position)
+        if (spawnPoint != null)
+        {
+            initialPosition = spawnPoint.position;
+            initialRotation = spawnPoint.rotation;
+        }
+        else
+        {
+            initialPosition = transform.position;
+            initialRotation = transform.rotation;
+        }
+    }
 
     public int TakeDamage(int damage)
     {
@@ -63,6 +92,36 @@ public class HealthLogic : MonoBehaviour
         return damage;
     }
 
+    public void TakeDirectDamage(int healthDamage, int armorDamage)
+    {
+        if (isDead) return;
+
+        // Apply damage directly without complex armor calculations
+        health -= healthDamage;
+        armor -= armorDamage;
+
+        // Ensure armor doesn't go below 0
+        if (armor < 0) armor = 0;
+
+        if (gameObject.CompareTag("Player"))
+        {
+            FPSUIManager.UpdateHealth(health);
+            FPSUIManager.UpdateShield(armor);
+        }
+
+        OnDamage?.Invoke(health, armor);
+
+        /* Handle death or pain sound */
+        if (health <= 0 && !isDead)
+            Die();
+        else if (health > 0 && painClipsArray != null && painClipsArray.Length > 0)
+        {
+            int randomClipIndex = UnityEngine.Random.Range(0, painClipsArray.Length);
+            if (SfxManager.instance != null)
+                SfxManager.instance.PlaySound(painClipsArray[randomClipIndex], transform, 0.4f);
+        }
+    }
+
     private void Die()
     {
         isDead = true;
@@ -75,12 +134,20 @@ public class HealthLogic : MonoBehaviour
         }
 
         OnDeath?.Invoke();
-        DisableEntityComponents();
 
-        if (useDeathDelay)
-            Destroy(gameObject, deathDelay);
+        // Check if this is the player - respawn instead of destroy
+        if (gameObject.CompareTag("Player"))
+        {
+            StartCoroutine(RespawnCoroutine());
+        }
         else
-            Destroy(gameObject);
+        {
+            DisableEntityComponents();
+            if (useDeathDelay)
+                Destroy(gameObject, deathDelay);
+            else
+                Destroy(gameObject);
+        }
     }
 
     private void DisableEntityComponents()
@@ -101,5 +168,27 @@ public class HealthLogic : MonoBehaviour
         Rigidbody rb = GetComponent<Rigidbody>();
         if (rb != null)
             rb.isKinematic = true;
+    }
+
+    private IEnumerator RespawnCoroutine()
+    {
+        // Wait for respawn delay
+        yield return new WaitForSeconds(respawnDelay);
+
+        // Reset position and rotation
+        transform.position = initialPosition;
+        transform.rotation = initialRotation;
+
+        // Reset health and armor
+        health = maxHealth;
+        armor = maxArmor;
+        isDead = false;
+
+        // Update UI
+        FPSUIManager.UpdateHealth(health);
+        FPSUIManager.UpdateShield(armor);
+
+        OnRespawn?.Invoke();
+        Debug.Log("Player respawned!");
     }
 }
