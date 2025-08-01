@@ -224,7 +224,6 @@ public class GunSystem : MonoBehaviour
             else
             {
                 // Fallback to old input system if no InputActionReference is assigned
-                Debug.LogWarning("Shoot action not assigned! Using fallback input.");
                 if (allowButtonHold) shooting = Input.GetKey(KeyCode.Mouse0);
                 else shooting = Input.GetKeyDown(KeyCode.Mouse0);
             }
@@ -241,8 +240,6 @@ public class GunSystem : MonoBehaviour
         }
         else
         {
-            // Fallback to old input system
-            Debug.LogWarning("Reload action not assigned! Using fallback input.");
             reloadPressed = Input.GetKeyDown(KeyCode.R);
         }
 
