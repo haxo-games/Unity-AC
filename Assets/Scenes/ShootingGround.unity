@@ -751,6 +751,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 9696210979cd8f64ebf9a265effaeacf, type: 3}
   deathDelay: 2
   useDeathDelay: 1
+  respawnDelay: 0
+  spawnPoint: {fileID: 0}
   health: 100
   armor: 50
 --- !u!114 &210786497
@@ -993,7 +995,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 7a835d1e01dd3dc45b112c7db440a793, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1032,7 +1034,7 @@ Transform:
   m_GameObject: {fileID: 219364918}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -103.39, y: 1.14, z: -24.2}
+  m_LocalPosition: {x: -103.39, y: 1.14, z: -26.54}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1052,7 +1054,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   promptMessage: Press (E) to interact
   canInteract: 1
-  damageAmount: 10
+  minHealthDamage: 5
+  maxHealthDamage: 20
+  minArmorDamage: 3
+  maxArmorDamage: 10
   interactionCooldown: 0.2
 --- !u!1 &236127453
 GameObject:
@@ -2142,6 +2147,132 @@ Transform:
   - {fileID: 237039735}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &467472420
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 467472424}
+  - component: {fileID: 467472423}
+  - component: {fileID: 467472422}
+  - component: {fileID: 467472425}
+  - component: {fileID: 467472421}
+  m_Layer: 6
+  m_Name: Health Cube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &467472421
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 467472420}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &467472422
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 467472420}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 076eee62564c38f41b4949533bb464b4, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &467472423
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 467472420}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &467472424
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 467472420}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -100.549995, y: 1.14, z: -26.54}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &467472425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 467472420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 629fe962caefc9c4d9e4af70a2ffec08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  promptMessage: Press (E) to interact
+  canInteract: 1
+  targetHealth: 100
+  shieldAmount: 50
+  interactionCooldown: 1
 --- !u!1 &499960207
 GameObject:
   m_ObjectHideFlags: 0
@@ -3233,6 +3364,8 @@ MonoBehaviour:
   painClipsArray: []
   deathDelay: 2
   useDeathDelay: 0
+  respawnDelay: 2
+  spawnPoint: {fileID: 666800172}
   health: 100
   armor: 1233
 --- !u!136 &666800170
@@ -3864,6 +3997,8 @@ MonoBehaviour:
   painClipsArray: []
   deathDelay: 2
   useDeathDelay: 0
+  respawnDelay: 2
+  spawnPoint: {fileID: 731222156}
   health: 100
   armor: 50
 --- !u!136 &731222154
@@ -4099,6 +4234,8 @@ MonoBehaviour:
   painClipsArray: []
   deathDelay: 2
   useDeathDelay: 0
+  respawnDelay: 0
+  spawnPoint: {fileID: 0}
   health: 100
   armor: 1
 --- !u!136 &772894024
@@ -4806,6 +4943,8 @@ MonoBehaviour:
   painClipsArray: []
   deathDelay: 2
   useDeathDelay: 0
+  respawnDelay: 2
+  spawnPoint: {fileID: 908465503}
   health: 100
   armor: 1
 --- !u!136 &908465501
@@ -6361,6 +6500,8 @@ MonoBehaviour:
   painClipsArray: []
   deathDelay: 2
   useDeathDelay: 0
+  respawnDelay: 2
+  spawnPoint: {fileID: 1391610318}
   health: 100
   armor: 1
 --- !u!136 &1391610316
@@ -8004,6 +8145,133 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1808270319}
   m_CullTransparentMesh: 1
+--- !u!1 &1809236574
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1809236579}
+  - component: {fileID: 1809236578}
+  - component: {fileID: 1809236577}
+  - component: {fileID: 1809236580}
+  - component: {fileID: 1809236576}
+  m_Layer: 6
+  m_Name: Ammo Cube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &1809236576
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1809236574}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1809236577
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1809236574}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 79fa60c4c397f0b4eb3104c1d595bf01, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1809236578
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1809236574}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1809236579
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1809236574}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -97.98, y: 1.14, z: -26.54}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1809236580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1809236574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db123864bd9f8414086db325bce9ad9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  promptMessage: Press (E) to interact
+  canInteract: 1
+  reserveAmmoAmount: 100
+  maxReserveCapacity: 200
+  refillMagazine: 1
+  interactionCooldown: 1
 --- !u!1001 &1810446397
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8177,6 +8445,8 @@ MonoBehaviour:
   painClipsArray: []
   deathDelay: 2
   useDeathDelay: 0
+  respawnDelay: 2
+  spawnPoint: {fileID: 1810446402}
   health: 100
   armor: 1
 --- !u!136 &1810446400
@@ -8407,6 +8677,8 @@ MonoBehaviour:
   painClipsArray: []
   deathDelay: 2
   useDeathDelay: 0
+  respawnDelay: 2
+  spawnPoint: {fileID: 1824265065}
   health: 100
   armor: 1
 --- !u!136 &1824265063
@@ -8868,6 +9140,8 @@ MonoBehaviour:
   painClipsArray: []
   deathDelay: 2
   useDeathDelay: 0
+  respawnDelay: 2
+  spawnPoint: {fileID: 1843625185}
   health: 100
   armor: 1
 --- !u!136 &1843625187
@@ -10171,3 +10445,5 @@ SceneRoots:
   - {fileID: 379741883}
   - {fileID: 2004707199}
   - {fileID: 219364922}
+  - {fileID: 467472424}
+  - {fileID: 1809236579}
