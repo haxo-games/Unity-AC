@@ -9,8 +9,10 @@ public class InputManager : MonoBehaviour
     public PlayerInput playerInput;
     
     void Awake()
-    { 
-    playerInput = new PlayerInput();
+    {
+
+        
+        playerInput = new PlayerInput();
     PlayerMovement = GetComponent<PlayerMovement>();
     playerLook = GetComponent<PlayerLook>();
     playerUI = GetComponent<PlayerUI>();
@@ -21,12 +23,10 @@ public class InputManager : MonoBehaviour
     playerInput.OnFoot.Crouch.canceled += ctx => PlayerMovement.ToggleCrouch();
     playerInput.UI.MainMenu.performed += ctx => HandleToggleMainMenu();
     
-   playerInput.OnFoot.Interact.performed += ctx => {
-    Debug.Log("InputManager: Interact action triggered by: " + ctx.control.name);
-    if (playerInteract != null)
+    // Add interact input handling with DEBUG
+    playerInput.OnFoot.Interact.performed += ctx => {
+        Debug.Log("InputManager: Interact action triggered!");
         playerInteract.TriggerInteract();
-    else
-        Debug.LogError("PlayerInteract is null!");
     };
     }
     
@@ -47,6 +47,7 @@ public class InputManager : MonoBehaviour
     
     void LateUpdate()
     {
+
         playerLook.ProcessLook(playerInput.OnFoot.Look.ReadValue<Vector2>());
     }
     

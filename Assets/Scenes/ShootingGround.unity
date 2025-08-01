@@ -1014,9 +1014,10 @@ GameObject:
   m_Component:
   - component: {fileID: 219364922}
   - component: {fileID: 219364921}
+  - component: {fileID: 219364923}
   - component: {fileID: 219364920}
   - component: {fileID: 219364919}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Damage Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1112,6 +1113,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &219364923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 219364918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e3f616cfd657a249bea433c9f5dfc7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  promptMessage: Press (E) to interact
+  canInteract: 1
+  damageAmount: 10
+  interactionCooldown: 1
 --- !u!1 &236127453
 GameObject:
   m_ObjectHideFlags: 0

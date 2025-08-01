@@ -5,15 +5,15 @@ public class CubeInteractable : Interactable
     [Header("Damage Settings")]
     [SerializeField] private int damageAmount = 10;
     [SerializeField] private float interactionCooldown = 1f;
-    
+
     private HealthLogic playerHealthLogic;
     private float lastInteractionTime;
-    
+
     void Start()
     {
-
         promptMessage = "Press (E) to take damage";
-        
+
+        // Find player's health component
         GameObject player = GameObject.FindWithTag("Player");
         if (player != null)
         {
@@ -28,8 +28,7 @@ public class CubeInteractable : Interactable
             Debug.LogError("CubeInteractable: No GameObject with 'Player' tag found!");
         }
     }
-    
-    
+
     protected override void Interact()
     {
         // Check cooldown
@@ -38,32 +37,20 @@ public class CubeInteractable : Interactable
             Debug.Log("Cube interaction on cooldown!");
             return;
         }
-        
+
         if (playerHealthLogic != null)
         {
             playerHealthLogic.TakeDamage(damageAmount);
             lastInteractionTime = Time.time;
             Debug.Log($"Cube dealt {damageAmount} damage to player!");
-            
-           
-            StartCoroutine(FlashRed()); // Optional add later
+
+            // Optional: Add visual/audio feedback here
+            // GetComponent<Renderer>().material.color = Color.red;
+            // Invoke("ResetColor", 0.2f);
         }
         else
         {
             Debug.LogWarning("CubeInteractable: Cannot deal damage - HealthLogic is null!");
-        }
-    }
-    
-
-    System.Collections.IEnumerator FlashRed()
-    {
-        Renderer renderer = GetComponent<Renderer>();
-        if (renderer != null)
-        {
-            Color originalColor = renderer.material.color;
-            renderer.material.color = Color.red;
-            yield return new WaitForSeconds(0.2f);
-            renderer.material.color = originalColor;
         }
     }
 }

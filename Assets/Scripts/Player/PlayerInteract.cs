@@ -16,12 +16,12 @@ public class PlayerInteract : MonoBehaviour
     
     void Start()
     {
-        // Get camera from PlayerLook component
+        
         PlayerLook playerLook = GetComponent<PlayerLook>();
         if (playerLook != null)
             playerCamera = playerLook.cam;
         
-        // Fallback: try to find camera as child or use Camera.main
+       
         if (playerCamera == null)
         {
             playerCamera = GetComponentInChildren<Camera>();
@@ -29,10 +29,10 @@ public class PlayerInteract : MonoBehaviour
                 playerCamera = Camera.main;
         }
         
-        // Get PlayerUI component
+        
         playerUI = GetComponent<PlayerUI>();
         
-        // Error checking
+        
         if (playerCamera == null)
             Debug.LogError("PlayerInteract: No camera found! Make sure PlayerLook component has a camera assigned or Camera.main exists.");
         if (playerUI == null)
@@ -49,10 +49,10 @@ public class PlayerInteract : MonoBehaviour
     {
         if (playerCamera == null || playerUI == null) return;
         
-        // Cast ray from camera center
+        
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
         
-        // Debug ray visualization in Scene view
+        
         if (enableDebugRay)
         {
             Debug.DrawRay(ray.origin, ray.direction * interactRange, Color.red, 0.1f);
@@ -64,11 +64,11 @@ public class PlayerInteract : MonoBehaviour
             
             if (interactable != null && interactable.canInteract)
             {
-                // Found a valid interactable
+                
                 if (currentInteractable != interactable)
                 {
-                    // New interactable detected
-                    ClearInteraction(); // Clear previous first
+                    
+                    ClearInteraction(); 
                     currentInteractable = interactable;
                     ShowInteractionPrompt();
                     
@@ -97,8 +97,7 @@ public class PlayerInteract : MonoBehaviour
             Debug.Log($"Interacting with: {currentInteractable.name}");
             currentInteractable.TriggerInteract();
             
-            // Optional: Clear interaction after use (uncomment if desired)
-            // ClearInteraction();
+   
         }
     }
     
@@ -132,7 +131,7 @@ public class PlayerInteract : MonoBehaviour
         }
     }
     
-    // Public method for external calls (keep for compatibility)
+    
     public void TriggerInteract()
     {
         if (currentInteractable != null)
@@ -142,11 +141,11 @@ public class PlayerInteract : MonoBehaviour
         }
     }
     
-    // Public getters for debugging
+ 
     public Interactable GetCurrentInteractable() => currentInteractable;
     public bool IsShowingPrompt() => isShowingPrompt;
     
-    // Force clear interaction (useful for external systems)
+   
     public void ForceCloseInteraction()
     {
         ClearInteraction();
@@ -154,7 +153,7 @@ public class PlayerInteract : MonoBehaviour
     
     void OnDisable()
     {
-        // Clean up when disabled
+        
         ClearInteraction();
     }
 }
