@@ -76,6 +76,9 @@ public class GunSystem : MonoBehaviour
     // Player Reference (for player recoil)
     private PlayerMovement PlayerMovement;
     private PlayerLook playerLook;
+    
+    // Weapon Switching Reference
+    private WeaponSwitching weaponSwitching;
 
     // UI Reference
     private FPSUIManager uiManager;
@@ -100,6 +103,9 @@ public class GunSystem : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
             audioSource = gameObject.AddComponent<AudioSource>();
+        
+        // Ensure audio doesn't play automatically
+        audioSource.playOnAwake = false;
 
         if (shootSound == null)
             shootSound = Resources.Load<AudioClip>("Audio/auto");
@@ -130,10 +136,18 @@ public class GunSystem : MonoBehaviour
 
         justActivated = true;
         activationTime = Time.time;
+        
+        // Clear any residual states to prevent unwanted audio
+        shooting = false;
+        reloading = false;
+        isShootSoundPlaying = false;
 
         currentRecoilOffset = Vector3.zero;
         recoilTimer = 0f;
-        transform.localPosition = originalPosition;
+        
+        // Only reset position if not switching weapons
+        if (weaponSwitching == null || !weaponSwitching.IsSwitching)
+            transform.localPosition = originalPosition;
 
         ResetCameraRecoil();
 
@@ -159,12 +173,32 @@ public class GunSystem : MonoBehaviour
     private void OnDisable()
     {
         reloading = false;
+        shooting = false;
+        readyToShoot = true;
 
         // Disable input actions
         if (shootAction != null)
             shootAction.action.Disable();
         if (reloadAction != null)
             reloadAction.action.Disable();
+            
+        // Clean up any active muzzle flash to prevent it getting stuck
+        if (currentMuzzleFlash != null)
+        {
+            Destroy(currentMuzzleFlash);
+            currentMuzzleFlash = null;
+        }
+        muzzleFlashTimer = 0f;
+        
+        // Stop any playing audio
+        if (audioSource != null && audioSource.isPlaying)
+        {
+            audioSource.Stop();
+        }
+        isShootSoundPlaying = false;
+        
+        // Cancel any pending Invoke calls to prevent issues after weapon is disabled
+        CancelInvoke();
     }
 
     private void FindPlayerReferences()
@@ -185,6 +219,11 @@ public class GunSystem : MonoBehaviour
 
         if (playerLook == null)
             playerLook = Object.FindFirstObjectByType<PlayerLook>();
+            
+        // Find weapon switching component
+        weaponSwitching = GetComponentInParent<WeaponSwitching>();
+        if (weaponSwitching == null)
+            weaponSwitching = Object.FindFirstObjectByType<WeaponSwitching>();
     }
 
     private void FindUIManager()
@@ -243,7 +282,7 @@ public class GunSystem : MonoBehaviour
             reloadPressed = Input.GetKeyDown(KeyCode.R);
         }
 
-        if (reloadPressed && bulletsLeft < magazingSize && !reloading && reserveSize > 0 && gameObject.activeSelf)
+        if (reloadPressed && bulletsLeft < magazingSize && !reloading && reserveSize > 0 && gameObject.activeSelf && !justActivated)
         {
             Reload();
             if (audioSource != null && reloadSound != null)
@@ -345,26 +384,38 @@ public class GunSystem : MonoBehaviour
     {
         if (playerLook != null)
         {
-            currentCameraRecoil = Vector3.zero;
-            targetCameraRecoil = Vector3.zero;
+            // Preserve current camera position by making it the new baseline
+            Vector3 currentOffset = playerLook.GetRecoilOffset();
+            
+            currentCameraRecoil = currentOffset;
+            targetCameraRecoil = currentOffset;
             recoilVelocity = Vector3.zero;
             wasShooting = false;
+            
+            // Keep the camera at its current position, don't reset to zero
+            playerLook.SetRecoilOffset(currentOffset);
         }
     }
 
     private void HandleCameraRecoil()
     {
         if (playerLook == null) return;
+        
+        // Don't handle camera recoil immediately after activation to prevent cursor jumps
+        if (justActivated && Time.time - activationTime < 0.1f) return;
 
         Vector3 currentRecoilOffset = playerLook.GetRecoilOffset();
 
-        if (wasShooting && !shooting)
+        // Only track actual shooting (when bullets are available), not just input
+        bool actuallyCanShoot = readyToShoot && shooting && !reloading && bulletsLeft > 0;
+
+        if (wasShooting && !actuallyCanShoot)
         {
-            // Add upward recoil when shot ends
+            // Add upward recoil when shot ends (only if we were actually shooting)
             targetCameraRecoil += new Vector3(2.3f, 0, 0);
         }
 
-        wasShooting = shooting;
+        wasShooting = actuallyCanShoot;
 
         Vector3 newRecoilOffset = Vector3.SmoothDamp(currentRecoilOffset, targetCameraRecoil, ref recoilVelocity, 0.1f);
 
@@ -456,6 +507,9 @@ public class GunSystem : MonoBehaviour
     private void HandleRecoil()
     {
         if (isReloadAnimating) return;
+        
+        // Don't handle recoil animation if weapon switching is in progress
+        if (weaponSwitching != null && weaponSwitching.IsSwitching) return;
 
         if (recoilTimer > 0)
         {
@@ -473,6 +527,9 @@ public class GunSystem : MonoBehaviour
     {
         if (isReloadAnimating)
         {
+            // Don't handle reload animation if weapon switching is in progress
+            if (weaponSwitching != null && weaponSwitching.IsSwitching) return;
+            
             Vector3 currentOffset = transform.localPosition - originalPosition;
             float animationSpeed = isSlideUp ? reloadMotionSpeed : reloadMotionSpeed;
             Vector3 newOffset = Vector3.Lerp(currentOffset, reloadTargetOffset, Time.deltaTime * animationSpeed);
@@ -501,7 +558,10 @@ public class GunSystem : MonoBehaviour
         {
             currentRecoilOffset = Vector3.zero;
             recoilTimer = 0f;
-            transform.localPosition = originalPosition;
+            
+            // Only reset position if not switching weapons
+            if (weaponSwitching == null || !weaponSwitching.IsSwitching)
+                transform.localPosition = originalPosition;
         }
     }
 
